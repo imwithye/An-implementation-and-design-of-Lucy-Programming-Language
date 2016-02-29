@@ -1,7 +1,7 @@
 .PHONY: pdf
 
 pdf:
-	@xelatex main
-	@bibtex main
-	@xelatex main
-	@xelatex main
+	@xelatex dissertation
+	@bibtex dissertation
+	@xelatex dissertation
+	@xelatex dissertation

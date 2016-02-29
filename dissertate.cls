@@ -106,12 +106,6 @@
 
 % Some definitions.
 \def\advisor#1{\gdef\@advisor{#1}}
-\def\coadvisorOne#1{\gdef\@coadvisorOne{#1}}
-\def\coadvisorTwo#1{\gdef\@coadvisorTwo{#1}}
-\def\committeeInternal#1{\gdef\@committeeInternal{#1}}
-\def\committeeInternalOne#1{\gdef\@committeeInternalOne{#1}}
-\def\committeeInternalTwo#1{\gdef\@committeeInternalTwo{#1}}
-\def\committeeExternal#1{\gdef\@committeeExternal{#1}}
 \def\degreeyear#1{\gdef\@degreeyear{#1}}
 \def\degreemonth#1{\gdef\@degreemonth{#1}}
 \def\degreeterm#1{\gdef\@degreeterm{#1}}
@@ -121,17 +115,13 @@
 \def\university#1{\gdef\@university{#1}}
 \def\universitycity#1{\gdef\@universitycity{#1}}
 \def\universitystate#1{\gdef\@universitystate{#1}}
-\def\programname#1{\gdef\@programname{#1}}
-\def\pdOneName#1{\gdef\@pdOneName{#1}}
-\def\pdOneSchool#1{\gdef\@pdOneSchool{#1}}
-\def\pdOneYear#1{\gdef\@pdOneYear{#1}}
-\def\pdTwoName#1{\gdef\@pdTwoName{#1}}
-\def\pdTwoSchool#1{\gdef\@pdTwoSchool{#1}}
-\def\pdTwoYear#1{\gdef\@pdTwoYear{#1}}
 % School name and location
-\university{Harvard University}
-\universitycity{Cambridge}
-\universitystate{Massachusetts}
+\degree{Bachelor}
+\department{School Of Computer Engineering}
+\field{Computer Science}
+\university{Nanyang Technological University}
+\universitycity{Singapore}
+\universitystate{Singapore}
 
 % School color found from university's graphic identity site:
 % http://isites.harvard.edu/icb/icb.do?keyword=k75408&pageid=icb.page392732
@@ -149,7 +139,7 @@
 % Formatting guidelines found in:
 % http://www.gsas.harvard.edu/publications/form_of_the_phd_dissertation.php
 \renewcommand{\frontmatter}{
-	\input{frontmatter/personalize}
+	\input{frontmatter/cover}
 	\maketitle
 	\copyrightpage
 	\abstractpage
@@ -182,7 +172,7 @@
 	\newpage
 	\thispagestyle{empty}
 	\vspace*{\fill}
-	\scshape \noindent \small \copyright \small 2014\hspace{3pt}-- \theauthor \\
+	\scshape \noindent \small \copyright \small 2016\hspace{3pt}-- \theauthor \\
 	\noindent all rights reserved.
 	\vspace*{\fill}
 	\newpage
@@ -194,7 +184,7 @@
 	\pagenumbering{roman}
 	\setcounter{page}{3}
 	\pagestyle{fancy}
-	\lhead{Thesis advisor: Professor \@advisor} \rhead{\@author}
+	\lhead{Thesis advisor: \@advisor} \rhead{\@author}
 	\renewcommand{\headrulewidth}{0.0pt}
 	\vspace*{35pt}
 	\begin{center}
@@ -217,7 +207,7 @@
 \newcommand{\acknowledgments}{
 	\chapter*{Acknowledgments}
 	\noindent
-	\input{frontmatter/thanks}
+	\input{frontmatter/acknowledgments}
 	\vspace*{\fill} \newpage
 	\setcounter{page}{1}
 	\pagenumbering{arabic}
