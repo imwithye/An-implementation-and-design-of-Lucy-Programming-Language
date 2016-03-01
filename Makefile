@@ -1,10 +1,10 @@
 .PHONY: pdf clean
 
 pdf:
-	@xelatex dissertation
+	@xelatex -synctex=1 dissertation
 	@bibtex dissertation
-	@xelatex dissertation
-	@xelatex dissertation
+	@xelatex -synctex=1 dissertation
+	@xelatex -synctex=1 dissertation
 
 clean:
 	@git clean -xdf
