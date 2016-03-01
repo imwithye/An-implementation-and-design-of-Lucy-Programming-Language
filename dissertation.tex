@@ -3,6 +3,17 @@
 
 
 \documentclass{dissertate}
+\lstset{
+  frame=single,
+  basicstyle=\footnotesize,
+  keywordstyle=\color{red},
+  numbers=left,
+  numbersep=5pt,
+  showstringspaces=false,
+  stringstyle=\color{blue},
+  tabsize=4,
+  language=Lucy
+}
 
 \begin{document}
 \setcounter{tocdepth}{3}
@@ -27,6 +38,7 @@
 
 % the back matter
 \clearpage
+\nocite{*}
 \bibliography{references}
 \addcontentsline{toc}{chapter}{References}
 \bibliographystyle{apalike2}

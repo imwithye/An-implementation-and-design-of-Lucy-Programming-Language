@@ -16,6 +16,8 @@
 % Text layout.
 \RequirePackage[width=5.75in, letterpaper]{geometry}
 \usepackage{ragged2e}
+\usepackage{listings}
+\usepackage{listings-lucy}
 \RaggedRight
 \RequirePackage{graphicx}
 \usepackage{fixltx2e}
