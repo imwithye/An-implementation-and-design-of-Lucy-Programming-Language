@@ -5,6 +5,8 @@
 \documentclass{dissertate}
 
 \begin{document}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
 
 % the front matter
 \frontmatter
@@ -12,10 +14,10 @@
 
 % include each chapter...
 \setcounter{chapter}{-1}  % start chapter numbering at 0
-\include{chapters/introduction}
-\include{chapters/chapter1}
-\include{chapters/chapter2}
-\include{chapters/chapter3}
+\include{chapters/00.Introduction}
+\include{chapters/01.Chapter1}
+\include{chapters/02.Chapter2}
+\include{chapters/03.Chapter3}
 \include{chapters/conclusion}
 \begin{appendices}
     \include{chapters/appendixA}
