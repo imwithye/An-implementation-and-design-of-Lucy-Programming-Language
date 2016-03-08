@@ -1,7 +1,7 @@
 %!TEX root = ../dissertation.tex
 \begin{savequote}[75mm]
-Nulla facilisi. In vel sem. Morbi id urna in diam dignissim feugiat. Proin molestie tortor eu velit. Aliquam erat volutpat. Nullam ultrices, diam tempus vulputate egestas, eros pede varius leo.
-\qauthor{Quoteauthor Lastname}
+A language that doesn't affect the way you think about programming is not worth knowing.
+\qauthor{Alan J. Perlis}
 \end{savequote}
 
 \chapter{Lucy Programming Language}
@@ -54,23 +54,37 @@ Inside the array, all items will be considered as optional type. So an two dimen
 \begin{lstlisting}
 var array = [none, 0, false, ""]
 \end{lstlisting}
-The + operator is used to concatenate two arrays and the result will be a new array that contains all elements of these two. When copying values to the new array, deep copy strategy is used so that every value inside these two arrays will be copied to the result array.
+The + operator is used to concatenate two arrays and the result will be a new array that contains all elements of these two. When copying values to the new array, deep copy strategy is used so that every value inside these two arrays will be copied to the result array. For example:
+\begin{lstlisting}
+var result = ["hello", 0] + [0, [1, "world"]]
+result == ["hello", 0, 0, [1, "world"]]
+\end{lstlisting}
+
+\subsection{Type}
+Lucy is a dynamic type programming language, which means the type of the variable can be changed during the runtime. But Lucy also provides a static type checking system which introduces the optional type the the language. In Lucy, a variable without associating a type keyword will be considered as an optional type value. Only the type of the variables of the optional types can be changed during runtime. For example:
+\begin{lstlisting}
+var a = 0      // a is a variable of optional type
+a = "string"
+a = false
+\end{lstlisting}
+Moreover, a variable of optional type can be assigned with any types but a variable of a fixed type can only be assigned with the value of that type. For example:
+\begin{lstlisting}
+var a, b:number  // a is optional but b is number
+a = b            // valid
+b = a            // invalid; type error
+\end{lstlisting}
+Optional type will propagate to the expression when connecting two different values:
+\begin{lstlisting}
+var a = 0, b:number = 0
+var c = a + b        // c is optional since a is optional in the add expression
+\end{lstlisting}
+The assignment rule is also used in function parameter. A number value can be passed to a function with number type or optional type parameter. An optional value can only be passed to functions with optional type parameter. For example:
+\begin{lstlisting}
+func add()
+\end{lstlisting}
 
 \subsection{Control Flow}
-Etiam maximus ex et vestibulum tempor. In convallis, nunc id fringilla tempus, ex magna faucibus enim, sit amet mollis justo metus vitae est. Nullam maximus facilisis venenatis. Aliquam convallis volutpat nibh, ut luctus ex viverra sit amet. Donec ut eros id magna semper eleifend. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet sem justo. Maecenas ultricies, ex et volutpat mollis, ipsum risus vestibulum lacus, sit amet congue leo nulla accumsan orci. Vivamus egestas, mauris nec efficitur interdum, risus tortor luctus ex, imperdiet pharetra tortor nunc at elit. Cras faucibus sem justo, ac efficitur orci molestie at. Proin bibendum luctus massa et pulvinar. Quisque at dui ut lorem porta laoreet ut id nisi. Suspendisse viverra sollicitudin faucibus. Aenean eget scelerisque lectus, quis gravida ligula. Nunc sem turpis, tincidunt vitae porttitor a, viverra pharetra tellus. Maecenas augue sem, scelerisque id nulla non, tincidunt vestibulum ante.
-\begin{lstlisting}[language=Lucy]
-  while i < 50 {
-    i = i + 1
-  }
-\end{lstlisting}
 
-Ut eu nibh tristique mauris maximus iaculis iaculis quis arcu. Nulla finibus quis turpis sed interdum. Sed viverra mi ac porta tempor. Aenean nec dui non erat vehicula pulvinar. Etiam vel nulla non lectus maximus fermentum. Curabitur nisl nisl, scelerisque at purus a, egestas consectetur est. Fusce blandit malesuada lacus ut feugiat. In cursus quam id leo accumsan, non congue quam cursus. Morbi convallis tortor id erat pharetra luctus. Maecenas in purus convallis nunc convallis laoreet vel vel purus. Ut cursus nibh a ipsum pellentesque congue. Nunc dui ligula, laoreet et ex et, venenatis mollis nunc. Duis blandit malesuada elit, varius malesuada risus dignissim ac.
-\begin{lstlisting}[language=Lucy]
-  if i < 50 and i >= 0 {
-    i = i + 1
-  }
-\end{lstlisting}
-Sed ut eleifend tortor. Donec iaculis non magna eget posuere. Nunc quis maximus risus. Donec at libero semper, sollicitudin odio vel, porttitor ante. Cras sed nisi nisl. Aenean vehicula odio egestas, accumsan diam egestas, venenatis magna. Nullam tempus sapien quis pharetra mollis. Donec sagittis est in lectus efficitur aliquet.
 
 \subsection{Function}
 Pellentesque congue maximus massa in iaculis. Pellentesque id quam interdum, aliquet massa ornare, fermentum purus. Cras vitae sollicitudin urna. Praesent iaculis, nisl et bibendum mollis, risus quam lacinia ipsum, id mattis magna est mollis purus. Sed et aliquet nulla. Phasellus ac risus iaculis, posuere ex hendrerit, scelerisque risus. In pharetra tincidunt dignissim. Morbi rutrum posuere facilisis. Donec at congue sapien. Nullam gravida sollicitudin est vel accumsan. Aenean at ipsum est. Proin mollis, odio sed dignissim elementum, diam lorem tincidunt metus, a dictum urna sem quis urna. Ut maximus felis ac enim ultricies tristique. Ut ac blandit libero. Cras dignissim orci nec augue porttitor congue.
