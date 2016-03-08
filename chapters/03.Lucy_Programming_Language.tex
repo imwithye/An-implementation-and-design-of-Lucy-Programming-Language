@@ -9,11 +9,15 @@ Donec pharetra, lorem at commodo facilisis, erat nisl luctus tellus, sed bibendu
 
 
 \section{A Tour with Lucy}
-Vestibulum sed arcu vitae felis rhoncus faucibus. Morbi lorem metus, euismod eu imperdiet a, viverra ut elit. Ut sit amet posuere enim. Curabitur laoreet mollis sem id accumsan. Sed at arcu eu nunc condimentum semper a id ligula. Vivamus felis urna, faucibus eu quam a, consectetur ullamcorper erat. Sed bibendum mi sed gravida pellentesque. Etiam auctor venenatis commodo. Pellentesque nec bibendum augue. Etiam auctor diam ut nibh scelerisque convallis faucibus quis lacus. Cras et egestas est. Sed ligula nibh, venenatis ut nibh et, faucibus tempus erat. Duis ut rutrum tellus, eget porta leo. Suspendisse potenti.
-\begin{lstlisting}[language=Lucy]
-  std::print("Hello World!\n")
+Tradition suggests that the first program in a new language should print the words "Hello World!" on the screen. In Lucy Programming Language, it can be done with invoking the print function from the std library.
+\begin{lstlisting}
+import "std"
+
+func main() {
+  std::print("Hello World!")
+}
 \end{lstlisting}
-Vestibulum malesuada odio a tempor condimentum. Integer volutpat nulla diam, non pellentesque arcu consequat quis. Donec vehicula efficitur metus, id placerat magna finibus sit amet. Curabitur placerat eros nec lectus faucibus, vel laoreet nunc faucibus. Curabitur hendrerit non lectus vel hendrerit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed et velit eu dolor facilisis interdum a quis neque. Praesent tempus et sapien rutrum feugiat. Etiam a feugiat est. Sed fermentum eleifend lorem, ac rutrum massa facilisis vitae. Nam gravida dignissim rutrum. Vestibulum aliquam turpis ac erat lacinia, quis sagittis elit consectetur. Curabitur elit nunc, facilisis vitae dignissim ac, facilisis ac neque. Mauris a iaculis velit. Maecenas nec ultrices lorem.
+If you have written code in C or C++, this code will be very familiar to you. The Lucy codes starts from the main function, which is very similar to C programming language, and it will execute the code line by line. Moreover, unlike C and C++, Lucy does not require semicolons at the end of every statement.
 
 \subsection{Simple Value}
 Donec ultrices, turpis id efficitur ullamcorper, justo dolor elementum dolor, in facilisis lacus elit et mauris. Donec egestas commodo lorem ac commodo. Vivamus nibh dui, sollicitudin non scelerisque ac, porta et ex. Fusce vel pretium massa, a malesuada augue. Pellentesque sit amet porttitor tellus. Donec dapibus lorem in condimentum gravida. In hac habitasse platea dictumst. Maecenas quis rhoncus justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur nec convallis turpis. Nulla nec dui sem. Nam ac auctor lectus. Mauris libero magna, lobortis ac quam sed, molestie interdum dui. Proin et lectus massa. Ut vitae tempor quam, at ornare mauris.
