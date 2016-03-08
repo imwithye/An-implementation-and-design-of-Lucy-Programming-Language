@@ -174,7 +174,19 @@ func main() {
 When declaring a function, the type keyword of parameter can be omitted if the the parameter is optional type. An optional typed parameter can be assigned with any other typed value but a none optional typed parameter can only be assigned with the corresponding typed value.
 
 \subsection{Parameter Passing}
-Vivamus ac orci ut mi ultrices scelerisque. Sed congue scelerisque neque, a eleifend velit vestibulum quis. Curabitur suscipit efficitur tortor, non aliquam leo consectetur ut. Quisque quis magna non ipsum lobortis malesuada dignissim ac enim. Donec at efficitur ipsum. Aliquam erat volutpat. Proin metus nulla, luctus et libero sed, tincidunt bibendum elit.
+Like a lot of other languages, invoking a function can be easily done with call the function name followed by the parameters. The only difference is that every thing in Lucy is passed by value, even if it is an array(As mentioned before, array is a primitive type in Lucy). In this case, modifying an array inside the function will not modify the real value of this array.
+\begin{lstlisting}
+func modify(a: []) {
+  a[0] = "new value"
+  return a
+}
+
+func main() {
+  var a = ["hello"]
+  modify(a)     // this will not modify a
+  a = modify(a) // correct to do the modification
+}
+\end{lstlisting}
 
 
 \section{Code Organization}
