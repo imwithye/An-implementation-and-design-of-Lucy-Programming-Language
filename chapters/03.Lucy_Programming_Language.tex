@@ -19,13 +19,42 @@ func main() {
 \end{lstlisting}
 If you have written code in C or C++, this code will be very familiar to you. The Lucy codes starts from the main function, which is very similar to C programming language, and it will execute the code line by line. Moreover, unlike C and C++, Lucy does not require semicolons at the end of every statement.
 
+Lucy does not requires the main function returns a int number as the program's exiting code and in fact, the virtual machine will detect the return statement during run time and return a none value if the function does not return anything. The detailed description of the function behavior will be introduced in function section. Though Lucy is a dynamic type programming language, i.e. the type of the the variable can be changed during run time, Lucy still requires compiling and linking to the Lucy X assembly code so that it can be interpreted by Lucy Virtual Machine. The mechanism behind Lucy, Lucy X and its virtual machine will be discussed in compilation and linking section. Lucy aims to provide a way to mix static type and dynamic type. The front-end semantic checker will ensure the correctness of the static type in static assignment, and the virtual machine will ensure the correctness of the assignment of dynamic type. The trade-offs of this syntax design and the implementation will be discussed in the syntax design section and the implementation chapter.
+
 \subsection{Simple Value}
-Donec ultrices, turpis id efficitur ullamcorper, justo dolor elementum dolor, in facilisis lacus elit et mauris. Donec egestas commodo lorem ac commodo. Vivamus nibh dui, sollicitudin non scelerisque ac, porta et ex. Fusce vel pretium massa, a malesuada augue. Pellentesque sit amet porttitor tellus. Donec dapibus lorem in condimentum gravida. In hac habitasse platea dictumst. Maecenas quis rhoncus justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur nec convallis turpis. Nulla nec dui sem. Nam ac auctor lectus. Mauris libero magna, lobortis ac quam sed, molestie interdum dui. Proin et lectus massa. Ut vitae tempor quam, at ornare mauris.
-\begin{lstlisting}[language=Lucy]
-  var text1 = "Hello World!", text2 = "Hello Lucy"
-  i = 0
+Lucy uses var keyword to create a variable and the initial value of the variable will be set to none if no type keyword is given.
+\begin{lstlisting}
+var a             // a is a optional type variable with none value
+var a = 10        // a is a number type variable with number value 10
+var a:number      // a is a number type variable with number value 0
+var a:number = 10 // a is a number type variable with number value 10
 \end{lstlisting}
-Quisque molestie ornare ante, sit amet commodo urna. In hac habitasse platea dictumst. Aenean maximus aliquam leo vel ultrices. Vestibulum at maximus elit. Cras massa sem, iaculis nec ultricies a, gravida eu ligula. Aenean eleifend at erat quis fringilla. Cras eget fringilla ligula, in rhoncus lacus. Vestibulum lobortis enim vel velit laoreet cursus. Vivamus elementum suscipit nibh, nec mattis eros semper id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam lectus justo, laoreet non purus eu, lobortis elementum felis.
+A comma can be used to separate the var declaration and to assign the variable a static type, type keyword should be present after every single declaration. For example:
+\begin{lstlisting}
+var a, b:number   // a is optional type but b is number type
+var a:number, b:number // both a and b are number type
+\end{lstlisting}
+The default value of the build types are set as following:
+\begin{itemize}
+  \item number: 0
+  \item boolean: false
+  \item string: ""
+  \item array: []
+  \item optional: none
+\end{itemize}
+
+\subsection{Array}
+In Lucy, array is a primitive type and is passed by value when invoking a function call. Lucy provides 3 low level instructions, getter, setter and len function, to access array items and attributes.
+\begin{lstlisting}
+var length = len(array)
+var value = array[0]
+array[0] = value
+\end{lstlisting}
+Inside the array, all items will be considered as optional type. So an two dimensional arrays can be implemented by an array that contains another one dimensional array. Array also can be represented as a literal value. For example:
+\begin{lstlisting}
+var array = [none, 0, false, ""]
+\end{lstlisting}
+The + operator is used to concatenate two arrays and the result will be a new array that contains all elements of these two. When copying values to the new array, deep copy strategy is used so that every value inside these two arrays will be copied to the result array.
 
 \subsection{Control Flow}
 Etiam maximus ex et vestibulum tempor. In convallis, nunc id fringilla tempus, ex magna faucibus enim, sit amet mollis justo metus vitae est. Nullam maximus facilisis venenatis. Aliquam convallis volutpat nibh, ut luctus ex viverra sit amet. Donec ut eros id magna semper eleifend. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet sem justo. Maecenas ultricies, ex et volutpat mollis, ipsum risus vestibulum lacus, sit amet congue leo nulla accumsan orci. Vivamus egestas, mauris nec efficitur interdum, risus tortor luctus ex, imperdiet pharetra tortor nunc at elit. Cras faucibus sem justo, ac efficitur orci molestie at. Proin bibendum luctus massa et pulvinar. Quisque at dui ut lorem porta laoreet ut id nisi. Suspendisse viverra sollicitudin faucibus. Aenean eget scelerisque lectus, quis gravida ligula. Nunc sem turpis, tincidunt vitae porttitor a, viverra pharetra tellus. Maecenas augue sem, scelerisque id nulla non, tincidunt vestibulum ante.
@@ -59,12 +88,6 @@ Duis vulputate tincidunt porta. Donec maximus lorem lacinia nulla hendrerit accu
       return fibonacci(n-1) + fibonacci(n-2)
     }
   }
-\end{lstlisting}
-
-\subsection{Array}
-Duis tempus sed justo vitae dictum. Quisque posuere turpis eget lacus consectetur volutpat. Morbi semper, risus ut ultricies ultricies, ligula felis condimentum mi, sit amet posuere tellus sem id diam. In hac habitasse platea dictumst. Vivamus commodo ligula in massa tempor venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin non efficitur ligula. Integer mattis ut elit non euismod. Proin cursus, turpis eget aliquet egestas, ipsum magna rutrum purus, non bibendum quam ipsum bibendum mi. Cras faucibus metus sed sapien facilisis sollicitudin. Morbi pretium nisl varius placerat bibendum. Donec auctor pellentesque dapibus.
-\begin{lstlisting}[language=Lucy]
-  var list = ["Hello", true, 0]
 \end{lstlisting}
 
 \subsection{Parameter Passing}
