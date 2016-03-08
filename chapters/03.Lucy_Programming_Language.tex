@@ -106,7 +106,35 @@ func main() {
 In the function definition, if there is no type keyword after the function signature, Lucy will treat it as optional type. If the function returns a value, it will simply return the result to the caller. If the function does not return any thing, the function will will return a none to the caller. The detailed behavior of the function will be discussed in the function section.
 
 \subsection{Control Flow}
-
+Lucy uses \texttt{if} for conditional control flow and \texttt{while} for loop conditional flow. The \texttt{if} statement will first check the value of the condition expression and only if the expression has a boolean value true, the statements inside if block will be executed. In this case, else keyword is used for handling the other cases. Braces around the body are required to clarify the bound of the statements.
+\begin{lstlisting}
+if expression {
+  // statements if expression is true
+} else {
+  // statements if expression is false
+}
+\end{lstlisting}
+\texttt{if} statement can also take a statement before checking the expression's value like the traditional \texttt{for} loop in C language.
+\begin{lstlisting}
+if var a = add(10, 20); a == 30 {
+  // statements if expression is true
+} else {
+  // statements if expression is false
+}
+\end{lstlisting}
+The \texttt{while} is very similar to the \texttt{if} statement. It checks the expression value every time before executing the statements inside the while loop. Only the condition expression is boolean type and equals true, it will execute the codes inside the loop.
+\begin{lstlisting}
+while expression {
+  // statements if expression is true
+}
+\end{lstlisting}
+Like \texttt{if} statement, the \texttt{while} can take a statement before checking the expression's value as well. But this statement will be only executed once.
+\begin{lstlisting}
+while a = add(10, 20); a < 50 {
+  // statements if expression is true
+}
+\end{lstlisting}
+In the above code, the value a will be evaluated once and in the second loop, the \texttt{while} statement will only checks the value of \texttt{a < 50}.
 
 \subsection{Function}
 Pellentesque congue maximus massa in iaculis. Pellentesque id quam interdum, aliquet massa ornare, fermentum purus. Cras vitae sollicitudin urna. Praesent iaculis, nisl et bibendum mollis, risus quam lacinia ipsum, id mattis magna est mollis purus. Sed et aliquet nulla. Phasellus ac risus iaculis, posuere ex hendrerit, scelerisque risus. In pharetra tincidunt dignissim. Morbi rutrum posuere facilisis. Donec at congue sapien. Nullam gravida sollicitudin est vel accumsan. Aenean at ipsum est. Proin mollis, odio sed dignissim elementum, diam lorem tincidunt metus, a dictum urna sem quis urna. Ut maximus felis ac enim ultricies tristique. Ut ac blandit libero. Cras dignissim orci nec augue porttitor congue.
