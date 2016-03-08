@@ -76,12 +76,34 @@ b = a            // invalid; type error
 Optional type will propagate to the expression when connecting two different values:
 \begin{lstlisting}
 var a = 0, b:number = 0
-var c = a + b        // c is optional since a is optional in the add expression
+var c = a + b        // c is optional type
 \end{lstlisting}
 The assignment rule is also used in function parameter. A number value can be passed to a function with number type or optional type parameter. An optional value can only be passed to functions with optional type parameter. For example:
 \begin{lstlisting}
-func add()
+func add(a, b) {
+  return a + b
+}
+
+func add_n(a: number, b: number): number {
+  return a + b
+}
+
+func add_s(a, b:number): string {
+  return std::string(a) + std::string(b)
+}
+
+func add_s_invalid(a, b:number): string {
+  return a + std::string(b)      // invalid; optional propagation
+}
+
+func main() {
+  var a = add("hello", "world")  // valid
+  var b = add(0, 1)  // valid    // invalid
+  var c = add_n("hello", "world") // invalid
+  var d = add_n(0, 1)             // valid
+}
 \end{lstlisting}
+In the function definition, if there is no type keyword after the function signature, Lucy will treat it as optional type. If the function returns a value, it will simply return the result to the caller. If the function does not return any thing, the function will will return a none to the caller. The detailed behavior of the function will be discussed in the function section.
 
 \subsection{Control Flow}
 
