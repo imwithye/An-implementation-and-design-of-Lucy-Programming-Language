@@ -137,22 +137,41 @@ while a = add(10, 20); a < 50 {
 In the above code, the value a will be evaluated once and in the second loop, the \texttt{while} statement will only checks the value of \texttt{a < 50}.
 
 \subsection{Function}
-Pellentesque congue maximus massa in iaculis. Pellentesque id quam interdum, aliquet massa ornare, fermentum purus. Cras vitae sollicitudin urna. Praesent iaculis, nisl et bibendum mollis, risus quam lacinia ipsum, id mattis magna est mollis purus. Sed et aliquet nulla. Phasellus ac risus iaculis, posuere ex hendrerit, scelerisque risus. In pharetra tincidunt dignissim. Morbi rutrum posuere facilisis. Donec at congue sapien. Nullam gravida sollicitudin est vel accumsan. Aenean at ipsum est. Proin mollis, odio sed dignissim elementum, diam lorem tincidunt metus, a dictum urna sem quis urna. Ut maximus felis ac enim ultricies tristique. Ut ac blandit libero. Cras dignissim orci nec augue porttitor congue.
-\begin{lstlisting}[language=Lucy]
-  func main() {
-    std::print("Hello World")
-  }
+Lucy uses \texttt{func} to define a function. In Lucy, every function will returns a value. The type keyword can be omitted if the function returns an optional value. If the function returns a none optional value, the type keyword must be present.
+\begin{lstlisting}
+func result() {
+  return none
+}
+
+func result_n(): number {
+  return 0
+}
 \end{lstlisting}
-Duis vulputate tincidunt porta. Donec maximus lorem lacinia nulla hendrerit accumsan. Curabitur elementum turpis quis ipsum dapibus blandit. Integer ac ex et enim convallis rutrum non vel massa. Vestibulum nec ligula scelerisque, blandit ipsum vitae, accumsan risus. Donec suscipit sem orci, porttitor volutpat tortor luctus sed. Integer posuere at risus vel fringilla. Curabitur condimentum eget enim nec varius. Phasellus auctor lacus est, non ornare massa finibus condimentum. Cras laoreet et odio vitae fermentum. Ut nec nulla vel eros aliquam vulputate. Vestibulum quam mauris, rutrum vitae turpis id, efficitur sagittis massa. Sed porttitor nisi vel massa fermentum molestie. Sed justo ligula, pellentesque at accumsan vitae, malesuada sit amet felis. Praesent sit amet arcu nibh.
-\begin{lstlisting}[language=Lucy]
-  func fibonacci(n) {
-    if n < 2 {
-      return n
-    } else {
-      return fibonacci(n-1) + fibonacci(n-2)
-    }
-  }
+If the function returns an optional value, then the function does not requires a return statement in every branch. If the return statement does not present, a none value will be returned.
+\begin{lstlisting}
+func result() {}
+
+func main() {
+  var a = result()
+  // a is optional type with a none value
+}
 \end{lstlisting}
+But if the function returns a none optional value, a return statement will be required in every branch inside the function.
+\begin{lstlisting}
+func result():number {
+  if true {
+    return 0
+  } else {
+    return 1    // return is required
+  }
+}
+
+func main() {
+  var a = result()
+  // a is number type with number value 0
+}
+\end{lstlisting}
+When declaring a function, the type keyword of parameter can be omitted if the the parameter is optional type. An optional typed parameter can be assigned with any other typed value but a none optional typed parameter can only be assigned with the corresponding typed value.
 
 \subsection{Parameter Passing}
 Vivamus ac orci ut mi ultrices scelerisque. Sed congue scelerisque neque, a eleifend velit vestibulum quis. Curabitur suscipit efficitur tortor, non aliquam leo consectetur ut. Quisque quis magna non ipsum lobortis malesuada dignissim ac enim. Donec at efficitur ipsum. Aliquam erat volutpat. Proin metus nulla, luctus et libero sed, tincidunt bibendum elit.
