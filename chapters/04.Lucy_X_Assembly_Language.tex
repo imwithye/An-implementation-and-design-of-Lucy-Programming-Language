@@ -47,8 +47,6 @@ Examples are shown below:
 mv result 0
 
 sum {
-  mv a 0
-  mv b 0
   pop a
   pop b
   add result a b
@@ -69,8 +67,6 @@ An example with Undefined Exception and Overdefined Exception:
 mv result 0
 
 sum {
-  mv a 0
-  mv b 0
   pop a
   pop b
   add result a b
@@ -104,5 +100,49 @@ Integer non est egestas, blandit magna sed, molestie eros. Quisque commodo velit
 \subsection{Module Structure}
 Praesent nec eros vitae ex sollicitudin pharetra. Donec porttitor, dolor a aliquam imperdiet, nunc velit dignissim nulla, id sodales turpis lorem eu orci. Mauris pellentesque, libero a tincidunt faucibus, nisi orci convallis nulla, sit amet scelerisque urna magna vitae turpis. Praesent dignissim lacus lectus, quis volutpat leo dignissim quis. Donec tincidunt neque ante, a commodo odio blandit vel. Suspendisse pharetra imperdiet urna, eget malesuada arcu dapibus at. Phasellus ultricies ligula eget tellus molestie mollis. Etiam rhoncus odio id orci interdum tincidunt. Aliquam at tellus vitae sapien maximus maximus vitae in justo.
 
-\subsection{Routine Structure}
-Phasellus scelerisque velit at ex porttitor imperdiet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed fringilla mattis odio, ac facilisis arcu porta non. Aliquam nec nisi quis lectus consectetur eleifend mollis et ante. Nunc consequat enim ante. Praesent sodales imperdiet laoreet. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum dictum congue felis quis mattis. In turpis lorem, sodales sagittis dictum et, hendrerit vel massa. Integer nunc turpis, venenatis at orci at, sodales posuere magna. Sed maximus ipsum risus, eu cursus erat ornare ut. Proin id semper ligula. Proin luctus magna at vestibulum pulvinar. Praesent urna diam, iaculis sollicitudin diam at, tempor tincidunt augue. Nullam vel leo ac lectus pretium mollis in id massa. Aliquam imperdiet dui sem, vel laoreet nisi varius nec.
+\subsection{Subroutine Structure}
+Lucy X modules are formed by subroutines and the main subroutine will be the entry of the whole program. As a low level assembly code, the subroutine does not provide arguments and the arguments will be retrieved from the stack of the virtual machine. \\
+The code transformation is shown below:
+\begin{lstlisting}[language=LucyX]
+func sum(a, b) {
+  return a + b
+}
+
+func main() {
+  result = sum(10, 10)
+}
+
+; The equivalent Lucy X assembly code
+
+sum {
+  pop a
+  pop b
+  add a a b
+  push a
+  ret
+}
+
+main {
+  push 10
+  push 10
+  call sum
+  pop result
+}
+\end{lstlisting}
+Before calling a subroutine, the caller shall push the parameters to the stack and invoke the subroutine. The target subroutine will pop the parameter from the stack and save it to the local registers. Then it performs code inside the subroutine. The Return instruction will stop executing the subroutine and go back to the callee, and before the return instruction, the subroutine shall push the result to the stack and the callee will pop it from the stack.
+The scope of Goto instruction and Branches instruction will also be limited inside the subroutine. All jump instruction will jump to the line of the target instruction but the line number is limited inside the subroutine. For example:
+\begin{lstlisting}[language=LucyX]
+sub {
+  pop a
+  pop b
+  les cmp a b
+  beq cmp 11
+  sub result a b
+  push result
+  ret
+  sub result b a
+  push result
+  ret
+}
+\end{lstlisting}
+The BEQ instruction will be limited inside the sub subroutine so the front end code generator can generate codes by subroutines.
