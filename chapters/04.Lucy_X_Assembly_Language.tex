@@ -24,8 +24,20 @@ Integer vel neque elit. Quisque auctor eros nisl, nec lobortis magna ultricies a
 
 
 \section{Identifiers}
-Phasellus id maximus nisi. Pellentesque porttitor nulla et dignissim tristique. Integer eget diam ante. Donec vehicula auctor est. Nunc convallis, quam eu cursus iaculis, elit metus rutrum lacus, ut dapibus nunc metus eget leo. Aenean mattis dictum lacus rhoncus placerat. Praesent sapien risus, vehicula eget lorem nec, aliquet molestie magna. Mauris luctus, massa at congue cursus, mauris arcu sodales eros, ac tincidunt nisi mi tincidunt ligula. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse ut maximus elit, vitae suscipit nulla. Suspendisse viverra lacus sapien, at condimentum dui finibus at. Duis ut justo a sapien suscipit vehicula ac id elit. Nulla gravida rutrum nulla, sagittis cursus sapien laoreet in.
+Lucy X identifiers come in two basic types: global and local. Global identifiers are subroutines, global variables and local identifiers are the local variables inside a subroutine. The identifier can be any strings which matches regular expression $[a-zA-Z]+[a-zA-Z0–9._]*$. The identifier is used to retrieve registers from Lucy virtual machine and the value inside the target register can be either Number, Boolean or String. \\
+Examples are shown below:
+\begin{lstlisting}[language=LucyX]
+; Add two numbers
+mv left 10
+mv right 20
+mv result 0
+add result left right
 
+; Sub two numbers
+mv diff 0
+sub diff left right
+\end{lstlisting}
+If the identifier is not defined before referenced, the virtual machine will define a new register in the virtual machine and if the identifier has been defined twice, the virtual machine will throw an Overdefined Exception instead.
 
 \section{Instruction Style}
 Nunc iaculis sollicitudin vehicula. Morbi sollicitudin scelerisque lectus vel dapibus. Aliquam congue, lorem fermentum auctor congue, quam leo semper lectus, nec mattis justo justo eu massa. Duis vehicula dapibus purus sit amet elementum. Sed aliquet efficitur laoreet. Donec vel lectus turpis. Nullam scelerisque, sem quis pellentesque porttitor, odio lorem ullamcorper lectus, sed consectetur lacus neque at ipsum. Sed faucibus, magna at volutpat rhoncus, ex arcu blandit enim, at fringilla leo felis nec ante. Proin id orci sit amet ante volutpat interdum vitae eu elit. Ut eu sapien ante. Etiam placerat, velit ac vulputate volutpat, diam enim vehicula metus, ut sagittis augue odio vitae purus.
