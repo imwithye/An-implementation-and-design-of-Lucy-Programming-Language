@@ -257,14 +257,16 @@ Makefile   - Makefile
 \end{lstlisting}
 The detailed compilation and linking strategy will be discussed in the Compilation and Linking section.
 
+
 \section{Syntax Design and Trade-offs}
-Quisque molestie ornare ante, sit amet commodo urna. In hac habitasse platea dictumst. Aenean maximus aliquam leo vel ultrices. Vestibulum at maximus elit. Cras massa sem, iaculis nec ultricies a, gravida eu ligula. Aenean eleifend at erat quis fringilla. Cras eget fringilla ligula, in rhoncus lacus. Vestibulum lobortis enim vel velit laoreet cursus. Vivamus elementum suscipit nibh, nec mattis eros semper id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam lectus justo, laoreet non purus eu, lobortis elementum felis.
+In this section we will discuss how Lucy syntex and its features imporves the the robustness of the program. Lucy is a general purpose language and it is designed to be lightweight. The syntax of Lucy is inspired by Golang and Swift, as well as TypeScript. It tends to be simple, elegant and easy for learning. The goal of the syntax is to provide a way which can minimun the token used without lossing the power of expression ability.
+\newline
+In the first subsection, we will take a look the syntactic sugar in the Lucy language and discuss how it imporves the experience of coding. In the second subsection, we will discuss the advantage and disadvantage of passing by values and passing by references.
 
 \subsection{Syntactic Sugar}
-Vivamus porttitor mi leo, in convallis orci vestibulum vel. Maecenas scelerisque risus non nibh tempus scelerisque. Suspendisse eros erat, mattis in hendrerit ac, posuere id lacus. Nunc non nibh sed ex malesuada tempor. Suspendisse iaculis ex ut luctus hendrerit. Donec sed sem in felis facilisis posuere. Praesent odio massa, cursus in dolor nec, congue dictum nibh. Pellentesque blandit orci blandit ligula consequat, eu placerat ligula volutpat. Vestibulum eu eros finibus, congue ex sit amet, lobortis purus. Aliquam et cursus arcu. Nunc fringilla est ac nisl consectetur tempor. In hac habitasse platea dictumst. Suspendisse sollicitudin cursus nibh, vel ultricies nisi pharetra quis. Aliquam commodo nibh ut velit eleifend pellentesque. Aenean sit amet neque venenatis, volutpat dui eget, aliquet arcu.
+
 
 \subsection{Passing by Values VS Passing by References}
-Quisque molestie ornare ante, sit amet commodo urna. In hac habitasse platea dictumst. Aenean maximus aliquam leo vel ultrices. Vestibulum at maximus elit. Cras massa sem, iaculis nec ultricies a, gravida eu ligula. Aenean eleifend at erat quis fringilla. Cras eget fringilla ligula, in rhoncus lacus. Vestibulum lobortis enim vel velit laoreet cursus. Vivamus elementum suscipit nibh, nec mattis eros semper id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam lectus justo, laoreet non purus eu, lobortis elementum felis.
 
 
 \section{Compilation and Linking}
