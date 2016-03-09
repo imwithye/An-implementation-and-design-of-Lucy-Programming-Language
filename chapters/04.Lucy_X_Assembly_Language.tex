@@ -24,7 +24,7 @@ Integer vel neque elit. Quisque auctor eros nisl, nec lobortis magna ultricies a
 
 
 \section{Identifiers}
-Lucy X identifiers come in two basic types: global and local. Global identifiers are subroutines, global variables and local identifiers are the local variables inside a subroutine. The identifier can be any strings which matches regular expression $[a-zA-Z]+[a-zA-Z0–9._]*$. The identifier is used to retrieve registers from Lucy virtual machine and the value inside the target register can be either Number, Boolean or String. \\
+Lucy X identifiers come in two basic types: global and local. Global identifiers are subroutines, global variables and local identifiers are the local variables inside a subroutine. The identifier can be any strings which matches regular expression $[\$a-zA-Z]+[a-zA-Z0–9._]*$. The identifier is used to retrieve registers from Lucy virtual machine and the value inside the target register can be either Number, Boolean or String. \\
 Examples are shown below:
 \begin{lstlisting}[language=LucyX]
 ; Add two numbers
@@ -38,6 +38,57 @@ mv diff 0
 sub diff left right
 \end{lstlisting}
 If the identifier is not defined before referenced, the virtual machine will define a new register in the virtual machine and if the identifier has been defined twice, the virtual machine will throw an Overdefined Exception instead.
+
+
+\section{Scope}
+Each subroutine has its own scope in Lucy virtual machine. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy virtual machine will keep looking for the definition in its parent scope until the module’s root scope. If the identifier does not present in any scope, an Undefined Exception will be thrown but only the identifier has been defined in current scope, the Overdefined Exception will be thrown. \\
+Examples are shown below:
+\begin{lstlisting}[language=LucyX]
+mv result 0
+
+sum {
+  mv a 0
+  mv b 0
+  pop a
+  pop b
+  add result a b
+}
+
+main {
+  mv a 10
+  mv b 12
+  push a
+  push b
+  call sum
+  put result
+}
+\end{lstlisting}
+It can be executed correctly since the result identifier is defined at the global scope and it can be retrieved by any subroutines.
+An example with Undefined Exception and Overdefined Exception:
+\begin{lstlisting}[language=LucyX]
+mv result 0
+
+sum {
+  mv a 0
+  mv b 0
+  pop a
+  pop b
+  add result a b
+}
+
+sum {}        ; Overdefined
+
+main {
+  mv a 10
+  mv b 12
+  push a
+  push b
+  call sum
+  put result
+  call div    ; Undefined
+}
+\end{lstlisting}
+
 
 \section{Instruction Style}
 Nunc iaculis sollicitudin vehicula. Morbi sollicitudin scelerisque lectus vel dapibus. Aliquam congue, lorem fermentum auctor congue, quam leo semper lectus, nec mattis justo justo eu massa. Duis vehicula dapibus purus sit amet elementum. Sed aliquet efficitur laoreet. Donec vel lectus turpis. Nullam scelerisque, sem quis pellentesque porttitor, odio lorem ullamcorper lectus, sed consectetur lacus neque at ipsum. Sed faucibus, magna at volutpat rhoncus, ex arcu blandit enim, at fringilla leo felis nec ante. Proin id orci sit amet ante volutpat interdum vitae eu elit. Ut eu sapien ante. Etiam placerat, velit ac vulputate volutpat, diam enim vehicula metus, ut sagittis augue odio vitae purus.
