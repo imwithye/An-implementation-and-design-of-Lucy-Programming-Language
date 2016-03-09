@@ -191,14 +191,71 @@ func main() {
 
 
 \section{Code Organization}
-Vivamus vel rutrum est, in feugiat mauris. Aenean quis odio id quam maximus faucibus. Nulla a ultrices velit. Sed viverra ultricies vestibulum. Donec eget neque a diam viverra rhoncus et sed erat. Pellentesque ut magna dolor. Nulla fringilla enim quam, eget posuere justo tristique eu. Nam imperdiet ex vitae volutpat sodales. Donec bibendum placerat ipsum id dictum. Aenean eget justo lobortis, molestie lectus id, mollis tellus. Fusce non ligula iaculis, mattis nulla non, lobortis mi. Donec id diam efficitur velit venenatis tincidunt a eu nibh. Fusce congue sem sed eleifend consectetur.
+The Lucy program is organized by packages. A Lucy source code file shall start with the package keyword with the a string package name. For example:
+\begin{lstlisting}
+package "string"
+\end{lstlisting}
+The above code defines a string package. An executable Lucy program must contain a main module and the main function must be in the main module.
+\begin{lstlisting}
+package "main"
+func main() {}
+\end{lstlisting}
+Functions inside package are directly visible to all functions inside this package even if they are in different files. For example we have following codes:
+\begin{lstlisting}
+// file1.ly
+package "string"
+func funca() {}
 
-\subsection{File, Directory and Package}
-Suspendisse potenti. Fusce volutpat erat dignissim velit luctus blandit. Vivamus tortor turpis, facilisis non massa sed, convallis varius nunc. Cras eu fringilla velit. Morbi accumsan posuere turpis vitae venenatis. Proin pellentesque purus quis elementum mollis. Vestibulum rutrum lectus in sagittis pulvinar. Suspendisse vulputate volutpat felis, et faucibus nisl. Nullam purus nunc, ornare ut nunc eget, congue auctor arcu. Nam a viverra justo. Nunc sodales lacinia mi sit amet dictum. Morbi eget vehicula nibh. Fusce est augue, elementum at finibus sagittis, ultrices vel sapien.
+// file2.ly
+package "string"
+func funcb() {
+  funca()
+}
+\end{lstlisting}
+Since the \texttt{file1} and \texttt{file2} are in the same package, when invoke the compile to compile these two files, the Lucy compile will link these two functions together into one module so that the all functions are visible inside the package. The details of how the compiler and linker works will be discussed in the Compilation and Linking section.
+\texttt{import} keyword is used to import functions from other package. for example:
+\begin{lstlisting}
+package "main"
+import "std"
+\end{lstlisting}
+In the above code imports the \texttt{std} package into the main module. The imported module will be linked during the linking stage by Lucy linker. And to invoke a function inside the \texttt{std} package, Lucy uses \texttt{::} to identify the function.
+\begin{lstlisting}
+package "main"
+import "std"
 
-\subsection{Import, User and System Modules}
-Vivamus porttitor mi leo, in convallis orci vestibulum vel. Maecenas scelerisque risus non nibh tempus scelerisque. Suspendisse eros erat, mattis in hendrerit ac, posuere id lacus. Nunc non nibh sed ex malesuada tempor. Suspendisse iaculis ex ut luctus hendrerit. Donec sed sem in felis facilisis posuere. Praesent odio massa, cursus in dolor nec, congue dictum nibh. Pellentesque blandit orci blandit ligula consequat, eu placerat ligula volutpat. Vestibulum eu eros finibus, congue ex sit amet, lobortis purus. Aliquam et cursus arcu. Nunc fringilla est ac nisl consectetur tempor. In hac habitasse platea dictumst. Suspendisse sollicitudin cursus nibh, vel ultricies nisi pharetra quis. Aliquam commodo nibh ut velit eleifend pellentesque. Aenean sit amet neque venenatis, volutpat dui eget, aliquet arcu.
+func main() {
+  std::print("Hello World!\n")
+}
+\end{lstlisting}
+When the Lucy compiler compiles the source code, when never a function is parsed, the function signature will be prefixed by the package name so that in the linking time, the function can be linked by the linker.
+\begin{lstlisting}
+package "string"
 
+func funca() {} // compiles to string::funca
+\end{lstlisting}
+So it is fine to define a function with the same name in the imported package. A \texttt{print} function can be defined inside the \texttt{main} package and when invoking \texttt{print} directly, the \texttt{print} function inside main module will be executed and when calling \texttt{std::print}, the \texttt{print} function inside \texttt{std} package will be executed.
+\begin{lstlisting}
+package "main"
+import "std"
+
+func print(val: string) {
+  printf("main: " + val)
+}
+
+func main() {
+  print("Hello World")      // print main: Hello World
+  std::print("Hello World") // print Hello World
+}
+\end{lstlisting}
+The following example shows a sample way to organize the Lucy codes.
+\begin{lstlisting}
+game.ly    - package "game"
+main.ly    - package "main"
+message.ly - package "message"
+util.ly    - package "util"
+Makefile   - Makefile
+\end{lstlisting}
+The detailed compilation and linking strategy will be discussed in the Compilation and Linking section.
 
 \section{Syntax Design and Trade-offs}
 Quisque molestie ornare ante, sit amet commodo urna. In hac habitasse platea dictumst. Aenean maximus aliquam leo vel ultrices. Vestibulum at maximus elit. Cras massa sem, iaculis nec ultricies a, gravida eu ligula. Aenean eleifend at erat quis fringilla. Cras eget fringilla ligula, in rhoncus lacus. Vestibulum lobortis enim vel velit laoreet cursus. Vivamus elementum suscipit nibh, nec mattis eros semper id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam lectus justo, laoreet non purus eu, lobortis elementum felis.
