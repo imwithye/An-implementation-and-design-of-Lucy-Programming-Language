@@ -350,9 +350,41 @@ func main() {
 \end{lstlisting}
 
 \section{Compilation and Linking}
-Suspendisse dictum lectus a nisl ultricies, in pharetra enim dignissim. Phasellus quis justo ornare, facilisis sem ut, dapibus ipsum. Nunc sed urna pharetra magna ornare viverra sodales ut mi. Vestibulum elementum ultrices elementum. Nullam ultrices tincidunt hendrerit. Cras condimentum, urna ut mollis porta, orci magna dapibus diam, quis interdum dui quam non arcu. Curabitur id lacus ex.
-
-Nunc feugiat pharetra pulvinar. Nullam interdum tellus sit amet sagittis gravida. Duis aliquet vitae turpis sit amet vestibulum. Vivamus risus neque, rhoncus ut lacus molestie, ullamcorper volutpat enim. Ut nunc nisi, iaculis sed nisl non, efficitur rhoncus ex. Aenean posuere nibh sed hendrerit gravida. Nullam eu justo aliquam lorem gravida volutpat sed nec dui. Praesent dictum enim ut lacus mattis venenatis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam nisl urna, facilisis vitae efficitur quis, tristique venenatis lacus. Curabitur fringilla interdum dignissim. Nunc sapien turpis, aliquam non elit eget, lobortis cursus velit. Pellentesque pellentesque at nunc a varius. Phasellus molestie ante vitae enim viverra laoreet. Cras sem justo, interdum at gravida sit amet, lobortis sit amet leo.
-\begin{lstlisting}[language=Bash]
-  lucy -c files
+As discussed before, Lucy is dynamic typed language with static type check. Lucy compiler is to translate the code to Lucy X assembly language and meanwhile it checks the static type to ensure all type signatures are correct. The Lucy linker is to link different packages according to the import keyword defined in the source code. To compile and link files:
+\begin{lstlisting}[language=bash]
+lucy -c file1.ly file2.ly file3.ly -o target
 \end{lstlisting}
+The above command will compile \texttt{file1}, \texttt{file2} and \texttt{file3} and then link them together then output to the target. As mentioned before, a package can be separated into different files. For example, a package is separated into \texttt{file1}, \texttt{file2} and \texttt{file3}, the above command will compile and link them to the target file. It is fine to compile the code in this way:
+\begin{lstlisting}[language=bash]
+lucy -c file1.ly file2.ly -o package1
+lucy -c package1 file2.ly -o package
+\end{lstlisting}
+But if \texttt{file1}, \texttt{file2} and \texttt{file3} contains two different packages, the above command will throw an exception since two packages cannot be linked into one module. An exception is the \texttt{main} package. A Lucy program must contain a main module and main function as its entry point. Linking with \texttt{main} package will make the module executable and change the module's name to \texttt{main}.
+\begin{lstlisting}[language=bash]
+lucy -c package1_file1.ly -o package1_part1
+lucy -c package1_file2.ly -o package1_part2
+lucy -c package1_part1 package1_part2 -o package1
+lucy -c package1 package2.ly -o package // Error!
+lucy -c package1 main.ly -o main        // main is executable
+\end{lstlisting}
+Separating the linking stage from the compilation stage will fasten the compilation speed. An example makefile of the minesweeper game is given below:
+ \begin{lstlisting}[language=bash]
+ minesweeper: main.lyo message.lyo game.lyo util.lyo
+	lucy -c message.lyo main.lyo game.lyo util.lyo -o minesweeper
+
+main.lyo: main.ly
+	lucy -c main.ly -o main.lyo
+
+message.lyo: message.ly
+	lucy -c message.ly -o message.lyo
+
+game.lyo:	game.ly
+	lucy -c game.ly -o game.lyo
+
+util.lyo: util.ly
+	lucy -c util.ly -o util.lyo
+
+clean:
+	rm -rf *.lyo
+	rm minesweeper
+ \end{lstlisting}
