@@ -316,7 +316,38 @@ This style omits the indexes in the for loop and it is easier for reading. Lucy 
 
 
 \subsection{Passing by Values VS Passing by References}
+Passing by values and passing by references have been discussed for a long time. In mathematical world, all functions are purely function which means the parameters of the function will not be changed after executing the function. In C language, everything is passed by value as well, but it can uses pointer to get the address of the parameter and change the value of the parameter. For example:
+\begin{lstlisting}
+void swap(int* a, int* b) {
+  int c = *a;
+  *a = *b;
+  *b = c;
+}
+\end{lstlisting}
+Since this kind of functions will modify the values of the parameters, for a complex function, it may make the code be more confusing. Another disadvantage is that this function can not be optimized for a multi-threads program. But on the other hand, for a pure function, usually it only returns one result, and there is no way to modify two variables. Since this kind of functions can change the values of the parameters, the results can be stored in the parameters, though this may confuse the formal definition of function. An elegant way to solve this problem is to allow function to return more than one results, like Golang and Python:
+\begin{lstlisting}[language=python]
+a, b = swap(a, b)
+\end{lstlisting}
+In Lucy, it allows function to return an array.
+\begin{lstlisting}
+func f() {
+  return [true, 0]
+}
+\end{lstlisting}
+Then the caller of this function may use index to get the result. In the future version, a syntactic sugar will be introduced to make the language more elegant.
+\begin{lstlisting}
+func f() {
+  return [true, 0]
+}
 
+func main() {
+  var a, b
+  a, b = f()        // syntactic sugar
+  var result = f()  // old version
+  a = result[0]
+  b = result[1]
+}
+\end{lstlisting}
 
 \section{Compilation and Linking}
 Suspendisse dictum lectus a nisl ultricies, in pharetra enim dignissim. Phasellus quis justo ornare, facilisis sem ut, dapibus ipsum. Nunc sed urna pharetra magna ornare viverra sodales ut mi. Vestibulum elementum ultrices elementum. Nullam ultrices tincidunt hendrerit. Cras condimentum, urna ut mollis porta, orci magna dapibus diam, quis interdum dui quam non arcu. Curabitur id lacus ex.
