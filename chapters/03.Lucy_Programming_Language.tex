@@ -259,12 +259,26 @@ The detailed compilation and linking strategy will be discussed in the Compilati
 
 
 \section{Syntax Design and Trade-offs}
-In this section we will discuss how Lucy syntex and its features imporves the the robustness of the program. Lucy is a general purpose language and it is designed to be lightweight. The syntax of Lucy is inspired by Golang and Swift, as well as TypeScript. It tends to be simple, elegant and easy for learning. The goal of the syntax is to provide a way which can minimun the token used without lossing the power of expression ability.
-\newline
-In the first subsection, we will take a look the syntactic sugar in the Lucy language and discuss how it imporves the experience of coding. In the second subsection, we will discuss the advantage and disadvantage of passing by values and passing by references.
+In this section we will discuss how Lucy syntax and its features improves the the robustness of the program. Lucy is a general purpose language and it is designed to be lightweight. The syntax of Lucy is inspired by Golang and Swift, as well as TypeScript. It tends to be simple, elegant and easy for learning. The goal of the syntax is to provide a way which can minimum the token used without losing the power of expression ability. \\
+In the first subsection, we will take a look the syntactic sugar in the Lucy language and discuss how it improves the experience of coding. In the second subsection, we will discuss the advantage and disadvantage of passing by values and passing by references.
 
 \subsection{Syntactic Sugar}
-
+In traditional programming language like C and Java, the basic syntaxes will variable declaration, assignment, expression, if statement, loop statement. In some modern languages, pattern matching will be introduced for replacing the switch statement.
+\subsubsection{Variable Declaration}
+In the static type programming language, usually the type keyword cannot be omitted so that the compiler can always detect the type of the variable. But in Golang and Swift, the type keyword is suggested to be omitted if the type can be inferred from the expression. For example:
+\begin{lstlisting}
+var a = 0
+\end{lstlisting}
+The variable a is a number type variable since the type of 0 is number. Another example is the C language's variable declaration style:
+\begin{lstlisting}[language=c]
+int a;
+\end{lstlisting}
+The first style is always suggested in Golang since from the expression, it is easy to know the type of a and the initial value of a is 0. In C language's style, it is easy to know the type of a is int but the initial value is implicit. In fact, a lot of bugs caused by this style since the default value of an int variable is random in C.
+A different example is Python and JavaScript's style. Since they are dynamic typed programming language and there is no need to declare the type of the variable. In Python and JavaScript, the variable declaration is just a simple assignment statement.
+\begin{lstlisting}
+a = 0
+\end{lstlisting}
+This style omits the var keyword which actually makes the code a little messy. For example, an editor with syntax highlighter can easily identify the declaration statement using the var style. But comparing with that, the single assignment style can not be easily identified by human. So considering the human readability, a var keyword is required in Lucy for declaring variables.
 
 \subsection{Passing by Values VS Passing by References}
 
