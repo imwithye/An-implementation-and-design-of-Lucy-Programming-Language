@@ -98,7 +98,7 @@ Integer non est egestas, blandit magna sed, molestie eros. Quisque commodo velit
 
 \section{High Level Structure}
 \subsection{Module Structure}
-Praesent nec eros vitae ex sollicitudin pharetra. Donec porttitor, dolor a aliquam imperdiet, nunc velit dignissim nulla, id sodales turpis lorem eu orci. Mauris pellentesque, libero a tincidunt faucibus, nisi orci convallis nulla, sit amet scelerisque urna magna vitae turpis. Praesent dignissim lacus lectus, quis volutpat leo dignissim quis. Donec tincidunt neque ante, a commodo odio blandit vel. Suspendisse pharetra imperdiet urna, eget malesuada arcu dapibus at. Phasellus ultricies ligula eget tellus molestie mollis. Etiam rhoncus odio id orci interdum tincidunt. Aliquam at tellus vitae sapien maximus maximus vitae in justo.
+Lucy X assembly language is formed by modules. In Lucy programming language, the package will be directly transformed to a Lucy X module. Each Lucy X module has a module name as its identifier and is formed by global instructions and subroutines. A module with main subroutine is an executable module and the main subroutine is its entry point. Inside the module, subroutines are identified by its name and there is no two routines sharing the same name. Modules can be linked together by Lucy linker only if the target module is a main module or the two modules are sharing the same module name, i.e. they are compiling from two different files within the same package.
 
 \subsection{Subroutine Structure}
 Lucy X modules are formed by subroutines and the main subroutine will be the entry of the whole program. As a low level assembly code, the subroutine does not provide arguments and the arguments will be retrieved from the stack of the virtual machine. \\
