@@ -264,6 +264,7 @@ In the first subsection, we will take a look the syntactic sugar in the Lucy lan
 
 \subsection{Syntactic Sugar}
 In traditional programming language like C and Java, the basic syntaxes will variable declaration, assignment, expression, if statement, loop statement. In some modern languages, pattern matching will be introduced for replacing the switch statement.
+
 \subsubsection{Variable Declaration}
 In the static type programming language, usually the type keyword cannot be omitted so that the compiler can always detect the type of the variable. But in Golang and Swift, the type keyword is suggested to be omitted if the type can be inferred from the expression. For example:
 \begin{lstlisting}
@@ -279,6 +280,40 @@ A different example is Python and JavaScript's style. Since they are dynamic typ
 a = 0
 \end{lstlisting}
 This style omits the var keyword which actually makes the code a little messy. For example, an editor with syntax highlighter can easily identify the declaration statement using the var style. But comparing with that, the single assignment style can not be easily identified by human. So considering the human readability, a var keyword is required in Lucy for declaring variables.
+
+\subsubsection{If, While and For}
+In traditional language like C, the if statement will takes an expression and brackets and braces are required.
+\begin{lstlisting}[language=c]
+if (expression) {}
+else {}
+\end{lstlisting}
+The Python's style may look a little bit simpler.
+\begin{lstlisting}[language=python]
+if expression:
+else:
+\end{lstlisting}
+Python uses indentation to identify the statement blocks. This makes the code more easily for understanding but it may cause problems when moving code to a new IDE or editor because different editor will use different strategies to handle the indents. \\
+In Golang and Swift's style, to improve the robustness of the code, the braces are still required so that even if the indentation is mixed by tabs and spaces, the compiler can still compiles the code correctly. But the bracket can be omitted. It may look like:
+\begin{lstlisting}
+if expression {}
+else {}
+\end{lstlisting}
+When we take a look of the for loop in C, the for loop is just a syntactic sugar of the while loop. The for loop is often used since it can take a statement before executing the loop and in each loop, the third statement will be executed so that programmers can simply detect the loop sequences.
+\begin{lstlisting}
+for(int i=0; i<10; i++)
+\end{lstlisting}
+Golang and Swift introduce this feature to the if statement. The if statement can take a statement before checking the boolean result of the condition expression.
+\begin{lstlisting}
+if a = funca(); a > 0 {}
+\end{lstlisting}
+With this style, it is easy to know where the value of the condition expression comes from. Lucy uses this style in both if and while statement.
+Another good example of the for loop is the Python's style. In Python, the for loop is used to iterating a list.
+\begin{lstlisting}[language=python]
+for item in items:
+  print item
+\end{lstlisting}
+This style omits the indexes in the for loop and it is easier for reading. Lucy takes this style in for to iterate arrays, but unlike python, the braces cannot be omitted to keep the robustness of the code.
+
 
 \subsection{Passing by Values VS Passing by References}
 
