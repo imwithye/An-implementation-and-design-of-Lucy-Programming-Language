@@ -11,7 +11,7 @@ Lucy programming language is compiled and linked to a module in Lucy X assembly 
 The Lucy X assembly language is inspired by MIPS assembly language and it provides dynamic type checking and scope inheritance. The Lucy X assembly language is formed by modules and routines and it stats executing from the main subroutine.
 
 \subsection{Goal of Lucy X Assembly Language}
-Duis interdum, dolor viverra placerat scelerisque, dui sem sodales ex, feugiat vehicula augue quam sit amet justo. Quisque rutrum elementum efficitur. Aliquam turpis justo, posuere eget sagittis at, vehicula in felis. Ut a dui non magna efficitur ullamcorper non et sapien. Integer dui neque, egestas posuere sem vestibulum, mollis facilisis justo. In gravida, leo nec tincidunt sollicitudin, ligula ligula dignissim nibh, et accumsan justo tellus et mi.
+Lucy X assembly language(Lucy X) is a general purpose programming language. Unlike other assembly language, Lucy X will not be translated into machine code and instead, it is interpreted by Lucy Virtual Machine. The goal of Lucy X is to provide a general purpose assembly language with as fewer instructions as possible, so that it is much more friendly and easier for the one who starts learning compiler techniques. In this case, unlike other low level programming language, Lucy X does not provide bit operation like shift and bit and. Instead, Lucy X uses common mathematical operators like add, sub, multiply, and divide.
 
 \subsection{Design Principles}
 Duis interdum, dolor viverra placerat scelerisque, dui sem sodales ex, feugiat vehicula augue quam sit amet justo. Quisque rutrum elementum efficitur. Aliquam turpis justo, posuere eget sagittis at, vehicula in felis. Ut a dui non magna efficitur ullamcorper non et sapien. Integer dui neque, egestas posuere sem vestibulum, mollis facilisis justo. In gravida, leo nec tincidunt sollicitudin, ligula ligula dignissim nibh, et accumsan justo tellus et mi.
@@ -21,6 +21,15 @@ Duis interdum, dolor viverra placerat scelerisque, dui sem sodales ex, feugiat v
 
 \section{Well-Formedness}
 Integer vel neque elit. Quisque auctor eros nisl, nec lobortis magna ultricies a. Maecenas ac ligula in nisl placerat congue. Cras sodales ante et tincidunt euismod. Duis suscipit magna vitae velit accumsan ornare. Aenean lobortis cursus lacus at malesuada. Nam vel dictum eros. Nam feugiat maximus ligula vitae tempus. Maecenas semper mauris pharetra quam pretium, vel lacinia risus egestas. Suspendisse ultrices risus non tincidunt commodo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas dignissim porta tellus. Cras finibus, nisi cursus laoreet efficitur, lacus eros sagittis enim, vitae volutpat ipsum ante eu sapien. Cras auctor nec diam eu gravida. Maecenas id mauris ornare, pulvinar augue ac, tempor est. Fusce vitae tortor ut augue volutpat consequat nec vel tortor.
+
+\section{Instruction Style}
+Nunc iaculis sollicitudin vehicula. Morbi sollicitudin scelerisque lectus vel dapibus. Aliquam congue, lorem fermentum auctor congue, quam leo semper lectus, nec mattis justo justo eu massa. Duis vehicula dapibus purus sit amet elementum. Sed aliquet efficitur laoreet. Donec vel lectus turpis. Nullam scelerisque, sem quis pellentesque porttitor, odio lorem ullamcorper lectus, sed consectetur lacus neque at ipsum. Sed faucibus, magna at volutpat rhoncus, ex arcu blandit enim, at fringilla leo felis nec ante. Proin id orci sit amet ante volutpat interdum vitae eu elit. Ut eu sapien ante. Etiam placerat, velit ac vulputate volutpat, diam enim vehicula metus, ut sagittis augue odio vitae purus.
+
+\subsection{Single Static Assignment Form}
+Curabitur facilisis vestibulum arcu nec convallis. Sed porta, diam non fermentum commodo, enim lectus consequat leo, non vulputate nisl massa eu nulla. Suspendisse mollis suscipit blandit. Phasellus cursus ante faucibus interdum pulvinar. Quisque nec vulputate urna, eget sodales justo. Quisque euismod ligula luctus leo hendrerit, id pretium tellus pharetra. Phasellus ac arcu nec metus ultricies molestie. Phasellus eros erat, lobortis non tellus in, aliquam molestie lectus. Donec interdum metus eu sapien hendrerit, eu iaculis nisl rutrum. Pellentesque leo felis, elementum a luctus id, venenatis ut quam.
+
+\subsection{Special Cases}
+Integer non est egestas, blandit magna sed, molestie eros. Quisque commodo velit id sapien ornare fringilla. Praesent cursus molestie odio non tempor. Donec at sem id dolor semper pulvinar sit amet a est. Sed id nulla justo. Curabitur nibh nulla, luctus vel scelerisque id, hendrerit id libero. Phasellus vulputate odio pharetra odio venenatis, a efficitur nulla gravida.
 
 
 \section{Identifiers}
@@ -84,16 +93,6 @@ main {
   call div    ; Undefined
 }
 \end{lstlisting}
-
-
-\section{Instruction Style}
-Nunc iaculis sollicitudin vehicula. Morbi sollicitudin scelerisque lectus vel dapibus. Aliquam congue, lorem fermentum auctor congue, quam leo semper lectus, nec mattis justo justo eu massa. Duis vehicula dapibus purus sit amet elementum. Sed aliquet efficitur laoreet. Donec vel lectus turpis. Nullam scelerisque, sem quis pellentesque porttitor, odio lorem ullamcorper lectus, sed consectetur lacus neque at ipsum. Sed faucibus, magna at volutpat rhoncus, ex arcu blandit enim, at fringilla leo felis nec ante. Proin id orci sit amet ante volutpat interdum vitae eu elit. Ut eu sapien ante. Etiam placerat, velit ac vulputate volutpat, diam enim vehicula metus, ut sagittis augue odio vitae purus.
-
-\subsection{Single Static Assignment Form}
-Curabitur facilisis vestibulum arcu nec convallis. Sed porta, diam non fermentum commodo, enim lectus consequat leo, non vulputate nisl massa eu nulla. Suspendisse mollis suscipit blandit. Phasellus cursus ante faucibus interdum pulvinar. Quisque nec vulputate urna, eget sodales justo. Quisque euismod ligula luctus leo hendrerit, id pretium tellus pharetra. Phasellus ac arcu nec metus ultricies molestie. Phasellus eros erat, lobortis non tellus in, aliquam molestie lectus. Donec interdum metus eu sapien hendrerit, eu iaculis nisl rutrum. Pellentesque leo felis, elementum a luctus id, venenatis ut quam.
-
-\subsection{Special Cases}
-Integer non est egestas, blandit magna sed, molestie eros. Quisque commodo velit id sapien ornare fringilla. Praesent cursus molestie odio non tempor. Donec at sem id dolor semper pulvinar sit amet a est. Sed id nulla justo. Curabitur nibh nulla, luctus vel scelerisque id, hendrerit id libero. Phasellus vulputate odio pharetra odio venenatis, a efficitur nulla gravida.
 
 
 \section{High Level Structure}
