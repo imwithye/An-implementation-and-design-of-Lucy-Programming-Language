@@ -18,7 +18,68 @@ A Java virtual machine (JVM) is an abstract computing machine that enables a com
 
 
 \section{Register and Its Scopes}
+As we mentioned last chapter, Lucy X assembly uses unlimited registers and scope isolation for the subroutines. In Lucy VM, registers are nothing more than a value container. It holds values and it can be addressed by the register name. Registers cannot share the same name in the same scope. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy VM will keep looking for the definition in its parent scope until the module’s root scope. \\
+The \texttt{Register} class is very simple and straightforward:
+\begin{lstlisting}[language=java]
+public class Register {
+    private Value value;
 
+    public Register(Value value) {
+        this.assignValue(value);
+    }
+
+    public Value getValue() {
+        return this.value;
+    }
+
+    public Type getType() {
+        return this.value.getType();
+    }
+
+    public Register assignValue(Value value) {
+        assert value != null;
+        this.value = value.copy();
+        return this;
+    }
+}
+\end{lstlisting}
+When assigning a value to the register, \texttt{copy} method will be called to create a new instance of the value, in which case, Lucy and Lucy X are all passed by values. Note that even though Lucy will be compiled to Lucy X and the transformation tends to be in SSA form, which is called well-formed Lucy X codes, it does not mean Lucy X is a SSA language and the register in Lucy VM is still mutable. \\
+The \texttt{Scope} class is a modified version of the \texttt{HashMap}. It contains a \texttt{HashMap} and a parent scope's reference.
+\begin{lstlisting}[language=java]
+public class Scope<K, V> implements Serializable {
+  private HashMap<K, V> scope;
+  private Scope<K, V> parent;
+
+  public Scope(Scope<K, V> parent) {
+    this.scope = new HashMap<K, V>();
+    this.parent = parent;
+  }
+
+  public Scope set(K key, V value) throws OverdefinedException {
+    assert key != null;
+    assert value != null;
+    if (this.isDefined(key)) {
+      throw new OverdefinedException(key, this);
+    }
+    return this.set(key, value);
+  }
+
+  public V get(K key) throws UndefinedException {
+    assert key != null;
+    V value = this.scope.get(key);
+    if (value == null) {
+      if (this.parent == null) {
+        throw new UndefinedException(key, this);
+      } else {
+        return this.parent.get(key);
+      }
+    } else {
+      return value;
+    }
+  }
+}
+\end{lstlisting}
+The \texttt{set} and \texttt{get} method in \texttt{Scope} class prevents setting the already defined key or getting an undefined key. The \texttt{get} method will keep looking until it reaches the root scope(i.e. the one without parent scope). When the given key is not in all the scopes, an \texttt{UndefinedException} will be thrown.
 
 \section{Routine Execution}
 Curabitur feugiat consectetur venenatis. Praesent ornare tellus tristique dictum suscipit. Donec blandit sodales leo, sed tempor turpis tristique at. Aenean convallis eros lacus. Maecenas commodo sem convallis, mollis enim quis, molestie est. Integer id condimentum arcu. In condimentum non diam nec aliquet. Sed volutpat quam at purus porttitor, at faucibus ante viverra. Nunc et arcu ac nunc tempus mollis eget at sem.
