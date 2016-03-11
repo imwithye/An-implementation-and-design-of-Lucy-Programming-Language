@@ -5,25 +5,25 @@ A language that doesn't affect the way you think about programming is not worth 
 \end{savequote}
 
 \chapter{Lucy Programming Language}
-The Lucy programming language is a dynamic type language with static type checking supported. The goal of Lucy language is to provide a elegant and safe method to ensure the correctness of a program. Similar to python, Lucy provides a run time type checking system to ensure each operation is done correctly. Meanwhile, inspired by TypeScript, Lucy provides static type check to improve the robustness of the program. And every thing in Lucy is passed by value, even if the parameter is an array.
-The following sections will first give an overview of the syntaxes and then describe how a Lucy program will be organized. We also discuss the benefits and trade-offs of the syntaxes of Lucy. In the last part of this chapter, we will discuss how the Lucy compiler and linker works and we will discuss how this method improve the compilation speed of the Lucy program.
+The Lucy programming language is a dynamic type language with static type checking. The goal of Lucy language is to provide an elegant and safe way to ensure the correctness of scripting program. Similar to python, Lucy provides a run time type checking system to ensure each operation is done correctly. Meanwhile, inspired by TypeScript, Lucy provides static type check to improve the robustness of the Lucy program. And every thing in Lucy is passed by value, even if the parameter is an array. \\
+The following sections will first give an overview of the syntaxes and then describe how a Lucy program will be organized. We also discuss the benefits and trade-offs of the syntaxes design. In the last part of this chapter, we will discuss how the Lucy compiler and linker works and we will discuss how this method improve the compilation speed of the Lucy program.
 
 
 \section{A Tour with Lucy}
-Tradition suggests that the first program in a new language should print the words "Hello World!" on the screen. In Lucy Programming Language, it can be done with invoking the print function from the std library.
+Tradition suggests that the first program in a new language should print the words "Hello World!" on the screen. In Lucy Programming Language, it can be done with invoking the \texttt{print} function from the \texttt{std} library.
 \begin{lstlisting}
 import "std"
 
 func main() {
-  std::print("Hello World!")
+  std::print("Hello World!\n")
 }
 \end{lstlisting}
 If you have written code in C or C++, this code will be very familiar to you. The Lucy codes starts from the main function, which is very similar to C programming language, and it will execute the code line by line. Moreover, unlike C and C++, Lucy does not require semicolons at the end of every statement.
 
-Lucy does not requires the main function returns a int number as the program's exiting code and in fact, the virtual machine will detect the return statement during run time and return a none value if the function does not return anything. The detailed description of the function behavior will be introduced in function section. Though Lucy is a dynamic type programming language, i.e. the type of the the variable can be changed during run time, Lucy still requires compiling and linking to the Lucy X assembly code so that it can be interpreted by Lucy Virtual Machine. The mechanism behind Lucy, Lucy X and its virtual machine will be discussed in compilation and linking section. Lucy aims to provide a way to mix static type and dynamic type. The front-end semantic checker will ensure the correctness of the static type in static assignment, and the virtual machine will ensure the correctness of the assignment of dynamic type. The trade-offs of this syntax design and the implementation will be discussed in the syntax design section and the implementation chapter.
+Lucy does not requires the main function to return an \texttt{int} number as the program's exiting code and in fact, the virtual machine will detect the return statement during run time and return a none value if the function does not return anything. The detailed description of the function behavior will be introduced in the function section. Though Lucy is a dynamic type programming language, i.e. the type of the the variable can be changed during the run time, Lucy still requires compiling and linking to the Lucy X assembly code so that it can be interpreted by Lucy Virtual Machine. The mechanism behind Lucy, Lucy X and its virtual machine will be discussed in the chapters of Lucy X Assembly Language and Lucy Virtual Machine. Lucy aims to provide a way to mix static type and dynamic type. The front-end semantic checker will ensure the correctness of the static type in a static assignment, and the virtual machine will ensure the correctness of the assignment of dynamic type. The trade-offs of this syntax design and the implementation will be discussed in the syntax design section and the implementation chapter.
 
 \subsection{Simple Value}
-Lucy uses var keyword to create a variable and the initial value of the variable will be set to none if no type keyword is given.
+Lucy uses \texttt{var} keyword to create a variable and the initial value of the variable will be set to none if no type keyword is given.
 \begin{lstlisting}
 var a             // a is a optional type variable with none value
 var a = 10        // a is a number type variable with number value 10
@@ -35,7 +35,7 @@ A comma can be used to separate the var declaration and to assign the variable a
 var a, b:number   // a is optional type but b is number type
 var a:number, b:number // both a and b are number type
 \end{lstlisting}
-The default value of the build types are set as following:
+The default value of the build-in types are set as following:
 \begin{itemize}
   \item number: 0
   \item boolean: false
@@ -62,21 +62,22 @@ result == ["hello", 0, 0, [1, "world"]]
 \end{lstlisting}
 
 \subsection{Type}
-Lucy is a dynamic type programming language, which means the type of the variable can be changed during the runtime. But Lucy also provides a static type checking system which introduces the optional type the the language. In Lucy, a variable without associating a type keyword will be considered as an optional type value. Only the type of the variables of the optional types can be changed during runtime. For example:
+Lucy is a dynamic type programming language, which means the type of the variable can be changed during the runtime. But Lucy also provides a static type checking system which introduces the optional type the the language. In Lucy, a variable without associating a type keyword will be considered as an optional type value. But if the initial value of the variable has a static type, the type of the variable will be inferred from that static type. The question mark will force the static type to be a optional type. Only the type of the variables of the optional types can be changed during runtime. For example:
 \begin{lstlisting}
-var a = 0      // a is a variable of optional type
-a = "string"
-a = false
+var a = 0      // a is a variable of number type
+var b = 0?     // b is optional type with value 0
+b = "string"
+b = false
 \end{lstlisting}
-Moreover, a variable of optional type can be assigned with any types but a variable of a fixed type can only be assigned with the value of that type. For example:
+Moreover, a variable of optional type can be assigned with any types but a variable of a static type can only be assigned with the value of that type. For example:
 \begin{lstlisting}
 var a, b:number  // a is optional but b is number
 a = b            // valid
 b = a            // invalid; type error
 \end{lstlisting}
-Optional type will propagate to the expression when connecting two different values:
+Optional type will propagate to the result of the expression when connecting two different values:
 \begin{lstlisting}
-var a = 0, b:number = 0
+var a = 0?, b:number = 0
 var c = a + b        // c is optional type
 \end{lstlisting}
 The assignment rule is also used in function parameter. A number value can be passed to a function with number type or optional type parameter. An optional value can only be passed to functions with optional type parameter. For example:
@@ -104,7 +105,7 @@ func main() {
   var d = add_n(0, 1)             // valid
 }
 \end{lstlisting}
-In the function definition, if there is no type keyword after the function signature, Lucy will treat it as optional type. If the function returns a value, it will simply return the result to the caller. If the function does not return any thing, the function will will return a none to the caller. The detailed behavior of the function will be discussed in the function section.
+In the function definition, if there is no type keyword after the function signature, Lucy will treat it as optional typed function. If the function returns a value, it will simply return the result to the caller. If the function does not return any thing, the function will return a none value to the caller. The detailed behavior of the function will be discussed in the function section.
 
 \subsection{Control Flow}
 Lucy uses \texttt{if} for conditional control flow and \texttt{while} for loop conditional flow. The \texttt{if} statement will first check the value of the condition expression and only if the expression has a boolean value true, the statements inside if block will be executed. In this case, else keyword is used for handling the other cases. Braces around the body are required to clarify the bound of the statements.
