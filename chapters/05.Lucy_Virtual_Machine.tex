@@ -93,7 +93,23 @@ The program counter is a pointer which points to the next instruction and memory
 
 \section{Routine Execution}
 The Lucy program will start executing from the \texttt{main} subroutine. When VM starts, it looks for the \texttt{main} subroutine from the Lucy X module, and start the routine execution process. \\
-Inside the subroutine, since Lucy X does not provide any nested statement blocks, instead, it uses a liner array to organize instructions and conditional jump or direct jump to simulate \texttt{if} or \texttt{while} loop.
+Before calling a subroutine, Lucy VM will first capture the current scope and program counter and reset them to initial state.
+\begin{lstlisting}[language=java]
+public Machine call(Module module, String routineName) {
+  assert module != null;
+  assert routineName != null;
+  Routine routine = module.getRoutine(routineName);
+  Scope<String, Register> currentScope = this.currentScope;
+  int pc = this.pc;
+  this.currentScope = new Scope<String, Register>(currentScope);
+  this.pc = 0;
+  this.execute(routine);
+  this.pc = pc;
+  this.currentScope = currentScope;
+  return this;
+}
+\end{lstlisting}
+The execute method will interpret the instructions inside the subroutine, since Lucy X does not provide any nested statement blocks, instead, it uses a liner array to organize instructions and conditional jump or direct jump to simulate \texttt{if} or \texttt{while} loop.
 \begin{lstlisting}[language=LucyX]
 main::fibonacci {
   pop n
@@ -122,7 +138,23 @@ main::fibonacci {
   ret
 }
 \end{lstlisting}
-Since Lucy X is a low level assembly language and it does not provide parameter passing by default. To simulate it, the caller has to first push the parameters to the stack and then in the subroutine, the callee pops the parameters from the stack. When returning a value to its caller, the callee first push the value to the stack and the caller pop the result from the stack.
+Moreover Lucy X is a low level assembly language and it does not provide parameter passing by default. To simulate it, the caller has to first push the parameters to the stack and then in the subroutine, the callee pops the parameters from the stack. When returning a value to its caller, the callee first push the value to the stack and the caller pop the result from the stack. In this case, all subroutines in Lucy X must have a return statement and if the return statement does not present in some branches, the VM will return a none value to the caller.
+\begin{lstlisting}[language=java]
+boolean hasReturn = false;
+while (this.pc < instructions.length) {
+  Instruction i = instructions[this.pc];
+  if (!i.execute(this, module)) {
+    this.pc++;
+  } else {
+    hasReturn = true;
+    break;
+  }
+}
+if (!hasReturn) {
+  this.pushValue(new NoneValue());
+}
+\end{lstlisting}
+The \texttt{execute} method returns true if it is a \texttt{ret} instruction or it breaks the execution of the subroutine.
 
 \section{Module Execution}
 Curabitur dictum, ex quis tristique euismod, nibh libero tempus augue, et tempus risus arcu sit amet ante. Quisque venenatis, tortor lacinia pellentesque auctor, mi felis pretium lectus, eget feugiat magna ante sed lacus. Nullam in aliquam urna. Etiam et ultricies purus. Integer quis efficitur urna. Sed faucibus elit vitae massa aliquam venenatis. Pellentesque imperdiet elit eget neque feugiat pretium. Aenean et nisl sem. Sed quam neque, euismod posuere pretium quis, tincidunt ac magna. Nunc mattis libero tortor, vitae rhoncus dolor cursus in. Cras consequat non mi sed scelerisque. Donec vitae neque at mauris ullamcorper pretium. Aenean sit amet venenatis leo. Fusce id risus eget quam faucibus lobortis eget quis dui. Pellentesque a massa augue. Nulla feugiat, nisi id maximus porttitor, odio lectus rhoncus ipsum, ut placerat nibh mi vitae magna.
