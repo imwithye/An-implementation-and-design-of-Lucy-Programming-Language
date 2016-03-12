@@ -90,11 +90,39 @@ public class Machine {
 \end{lstlisting}
 The program counter is a pointer which points to the next instruction and memory stack is reserved for parameter passing.
 
+
 \section{Routine Execution}
-Curabitur feugiat consectetur venenatis. Praesent ornare tellus tristique dictum suscipit. Donec blandit sodales leo, sed tempor turpis tristique at. Aenean convallis eros lacus. Maecenas commodo sem convallis, mollis enim quis, molestie est. Integer id condimentum arcu. In condimentum non diam nec aliquet. Sed volutpat quam at purus porttitor, at faucibus ante viverra. Nunc et arcu ac nunc tempus mollis eget at sem.
-
-Nullam euismod a ipsum feugiat maximus. Maecenas vehicula commodo lacinia. Donec nec tincidunt dolor. Donec lectus mauris, molestie in ipsum at, maximus fringilla ligula. Fusce consequat mi odio, nec malesuada ante tristique a. In hac habitasse platea dictumst. Nulla efficitur malesuada diam vel consequat. Pellentesque augue nisi, ornare et eros sed, lobortis condimentum dui. Ut eu placerat sem, vitae viverra urna. Maecenas rutrum odio et luctus cursus. Sed blandit nisi id leo fermentum blandit. Phasellus convallis vulputate turpis, pretium mattis nibh suscipit vitae. Nullam porta ligula eu leo commodo, vitae blandit lorem efficitur. Nunc pellentesque sagittis dolor maximus feugiat. Phasellus luctus turpis sem, at lacinia odio ullamcorper eu. Praesent tellus odio, condimentum non vehicula id, consectetur ut nunc.
-
+The Lucy program will start executing from the \texttt{main} subroutine. When VM starts, it looks for the \texttt{main} subroutine from the Lucy X module, and start the routine execution process. \\
+Inside the subroutine, since Lucy X does not provide any nested statement blocks, instead, it uses a liner array to organize instructions and conditional jump or direct jump to simulate \texttt{if} or \texttt{while} loop.
+\begin{lstlisting}[language=LucyX]
+main::fibonacci {
+  pop n
+  mv $1 n
+  mv $2 2
+  les $0 $1 $2
+  bne $0 9
+  mv $3 n
+  push $3
+  ret
+  goto 24
+  mv $7 n
+  mv $8 1
+  sub $6 $7 $8
+  push $6
+  call main::fibonacci
+  pop $5
+  mv $11 n
+  mv $12 2
+  sub $10 $11 $12
+  push $10
+  call main::fibonacci
+  pop $9
+  add $4 $5 $9
+  push $4
+  ret
+}
+\end{lstlisting}
+Since Lucy X is a low level assembly language and it does not provide parameter passing by default. To simulate it, the caller has to first push the parameters to the stack and then in the subroutine, the callee pops the parameters from the stack. When returning a value to its caller, the callee first push the value to the stack and the caller pop the result from the stack.
 
 \section{Module Execution}
 Curabitur dictum, ex quis tristique euismod, nibh libero tempus augue, et tempus risus arcu sit amet ante. Quisque venenatis, tortor lacinia pellentesque auctor, mi felis pretium lectus, eget feugiat magna ante sed lacus. Nullam in aliquam urna. Etiam et ultricies purus. Integer quis efficitur urna. Sed faucibus elit vitae massa aliquam venenatis. Pellentesque imperdiet elit eget neque feugiat pretium. Aenean et nisl sem. Sed quam neque, euismod posuere pretium quis, tincidunt ac magna. Nunc mattis libero tortor, vitae rhoncus dolor cursus in. Cras consequat non mi sed scelerisque. Donec vitae neque at mauris ullamcorper pretium. Aenean sit amet venenatis leo. Fusce id risus eget quam faucibus lobortis eget quis dui. Pellentesque a massa augue. Nulla feugiat, nisi id maximus porttitor, odio lectus rhoncus ipsum, ut placerat nibh mi vitae magna.
