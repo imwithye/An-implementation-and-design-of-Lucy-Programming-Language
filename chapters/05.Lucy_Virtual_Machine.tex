@@ -79,7 +79,16 @@ public class Scope<K, V> implements Serializable {
   }
 }
 \end{lstlisting}
-The \texttt{set} and \texttt{get} method in \texttt{Scope} class prevents setting the already defined key or getting an undefined key. The \texttt{get} method will keep looking until it reaches the root scope(i.e. the one without parent scope). When the given key is not in all the scopes, an \texttt{UndefinedException} will be thrown.
+The \texttt{set} and \texttt{get} method in \texttt{Scope} class prevents setting the already defined key or getting an undefined key. The \texttt{get} method will keep looking until it reaches the root scope(i.e. the one without parent scope). When the given key is not in all the scopes, an \texttt{UndefinedException} will be thrown. \\
+The Lucy VM will create a global scope which stores the global register names and when executing each subroutine, a new local scope will be created to store the registers declared inside the subroutine.
+\begin{lstlisting}[language=java]
+public class Machine {
+  private int pc;
+  private Scope<String, Register> rootScope;
+  private Stack<Value> memoryStack;
+}
+\end{lstlisting}
+The program counter is a pointer which points to the next instruction and memory stack is reserved for parameter passing.
 
 \section{Routine Execution}
 Curabitur feugiat consectetur venenatis. Praesent ornare tellus tristique dictum suscipit. Donec blandit sodales leo, sed tempor turpis tristique at. Aenean convallis eros lacus. Maecenas commodo sem convallis, mollis enim quis, molestie est. Integer id condimentum arcu. In condimentum non diam nec aliquet. Sed volutpat quam at purus porttitor, at faucibus ante viverra. Nunc et arcu ac nunc tempus mollis eget at sem.
