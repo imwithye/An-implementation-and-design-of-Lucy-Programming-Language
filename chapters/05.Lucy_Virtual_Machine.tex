@@ -8,17 +8,17 @@ If a machine is expected to be infallible, it cannot also be intelligent.
 Lucy Programming Language(or Lucy) is a dynamic language which runs the code over Lucy Virtual Machine. The goal of the Lucy Virtual Machine is to provide a generic platform so that the source codes of Lucy can be interpreted over it. Lucy Virtual Machine is a single thread virtual machine and driven by a small set of instructions, Lucy X assembly language. Moreover, the Lucy Virtual machine provides unlimited registers, routine scope isolation and dynamic type checking. In this chapter, we will discuss the design of the Lucy virtual machine. First we will discuss the the goal of Lucy virtual machine and the design principle. Then we will compare the Lucy virtual machine with the Java virtual machine. In the second part of this chapter, we will discuss how the register and scope isolation works and in the last part of this chapter, we will discuss how modules and routines are executed by the virtual machine.
 
 \section{Overview}
-The Lucy virtual machine(Lucy VM) is the a low level virtual machine which is driven by Lucy X assembly languages. Lucy virtual machine is an open protocol which can be implemented in any programming language. Lucy VM tends to be a purely logical system. Lucy VM does not simulate cache and main memory, instead, it provides unlimited registers to hold values and unlimited stack memory to perform function calls. Registers in Lucy VM stores a value object which can be number, string, boolean, array or none. The type of the value will be checked during run time to ensure the correctness of every operation.
+The Lucy virtual machine(Lucy VM) is an open protocol, a low level virtual machine which is driven by Lucy X assembly languages. Ideally, it can be implemented by any programming languages. Lucy VM tends to be a purely logical system. Lucy VM does not simulate cache and main memory, instead, it provides unlimited registers to hold values and unlimited stack memory to perform function calls. Registers in Lucy VM stores a value object which can be number, string, boolean, array or none. The type of the value will be checked during run time to ensure the correctness of every operation.
 
 \subsection{Goal of Lucy Virtual Machine}
-Lucy virtual machine is a general purpose virtual machine, and it simulates the real computer in an abstract level. Lucy VM tends to be as simple as possible. The goal of Lucy VM is to provide a completed virtual system without increasing the complexity. Lucy VM is designed for Lucy X and driven by Lucy X only, which is a good start point for those who are interested in compiler techniques.
+Lucy virtual machine is a general purpose virtual machine, and it simulates the real computer at an abstract level. Lucy VM tends to be as simple as possible. The goal of Lucy VM is to provide a completed virtual system without increasing the complexity. Lucy VM is designed for Lucy X and driven by Lucy X only, which is a good start point for those who are interested in compiler techniques.
 
 \subsection{Differences between Java Stack Machine}
-A Java virtual machine (JVM) is an abstract computing machine that enables a computer to run a Java program. Java virtual machine is a stack machine and driven by Java byte code. Unlike Lucy VM, Java uses stack to hold result of the instruction. Operands shall be pushed into the stack before calling the operator. After calculating the result, operand will be popped from the stack memory. Moreover, Java byte code is a type sensitive language while registers in Lucy VM are dynamic typed.
+A Java virtual machine (JVM) is an abstract computing machine that enables a computer to run a Java program. Java virtual machine is a stack machine and driven by Java byte code. Unlike Lucy VM, Java uses stack to hold result of the instruction. Operands shall be pushed into the stack before calling the operator. After calculating the result, operand will be popped from the stack memory. Moreover, Java byte code is a type sensitive language while registers in Lucy VM are dynamic type.
 
 
 \section{Register and Its Scopes}
-As we mentioned last chapter, Lucy X assembly uses unlimited registers and scope isolation for the subroutines. In Lucy VM, registers are nothing more than a value container. It holds values and it can be addressed by the register name. Registers cannot share the same name in the same scope. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy VM will keep looking for the definition in its parent scope until the module’s root scope. \\
+As we mentioned in last chapter, Lucy X assembly uses unlimited registers and scope isolation for the subroutines. In Lucy VM, registers are nothing more than a value container. It holds values and it can be addressed by the register name. Registers cannot share the same name in the same scope. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy VM will keep looking for the definition in its parent scope until the module’s root scope. \\
 The \texttt{Register} class is very simple and straightforward:
 \begin{lstlisting}[language=java]
 public class Register {
@@ -109,7 +109,7 @@ public Machine call(Module module, String routineName) {
   return this;
 }
 \end{lstlisting}
-The execute method will interpret the instructions inside the subroutine, since Lucy X does not provide any nested statement blocks, instead, it uses a liner array to organize instructions and conditional jump or direct jump to simulate \texttt{if} or \texttt{while} loop.
+The \texttt{execute} method will interpret the instructions inside the subroutine, since Lucy X does not provide any nested statement blocks, instead, it uses a liner array to organize instructions and conditional jump or direct jump to simulate \texttt{if} or \texttt{while} loop.
 \begin{lstlisting}[language=LucyX]
 main::fibonacci {
   pop n
@@ -138,7 +138,7 @@ main::fibonacci {
   ret
 }
 \end{lstlisting}
-Moreover Lucy X is a low level assembly language and it does not provide parameter passing by default. To simulate it, the caller has to first push the parameters to the stack and then in the subroutine, the callee pops the parameters from the stack. When returning a value to its caller, the callee first push the value to the stack and the caller pop the result from the stack. In this case, all subroutines in Lucy X must have a return statement and if the return statement does not present in some branches, the VM will return a none value to the caller.
+Moreover Lucy X is a low level assembly language and it does not provide parameter passing by default. To simulate it, the caller has to first push the parameters to the stack and then in the subroutine, the callee pops the parameters from the stack. When returning a value to its caller, the callee first pushes the value to the stack and the caller pops the result from the stack. In this case, all subroutines in Lucy X must have a return statement and if the return statement is not present in some branches, the VM will return a none value to the caller.
 \begin{lstlisting}[language=java]
 boolean hasReturn = false;
 while (this.pc < instructions.length) {
@@ -151,10 +151,11 @@ while (this.pc < instructions.length) {
   }
 }
 if (!hasReturn) {
+  // add a ret none instruction
   this.pushValue(new NoneValue());
 }
 \end{lstlisting}
-The \texttt{execute} method returns true if it is a \texttt{ret} instruction or it breaks the execution of the subroutine.
+The \texttt{execute} method returns true if the instruction is a \texttt{ret} instruction or it breaks the execution of the subroutine.
 
 \section{Module Execution}
 Since Lucy only supports static linking, when executing a module, the module must contains all required method instead of loading them during the run time. Otherwise, an \texttt{UndefinedException} will be thrown. Moreover, the module must be an executable module, which shall contains the main function. A static library module will make the VM throw an \texttt{UndefinedException}.
