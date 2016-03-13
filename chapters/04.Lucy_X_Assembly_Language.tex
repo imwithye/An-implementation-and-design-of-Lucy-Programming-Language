@@ -8,7 +8,7 @@ Because I want to know how it works.
 Lucy programming language is compiled and linked to a module in Lucy X assembly language. The Lucy X assembly language will be finally interpreted by Lucy Virtual Machine. This chapter first gives an overview of the Lucy X assembly language and then gives a formal definition of the Lucy X assembly code. Finally we will discuss how the Lucy X assembly code will be organized.
 
 \section{Overview}
-The Lucy X assembly language is inspired by MIPS assembly language and it provides dynamic type checking and scope inheritance. The Lucy X assembly language is formed by modules and routines and it stats executing from the main subroutine.
+The Lucy X assembly language is inspired by MIPS assembly language and it provides dynamic type checking and scope isolation and inheritance. The Lucy X assembly language is formed by modules and routines and it stats executing from the main subroutine.
 
 \subsection{Goal of Lucy X Assembly Language}
 Lucy X assembly language(Lucy X) is a general purpose programming language. Unlike other assembly language, Lucy X will not be translated into machine code and instead, it is interpreted by Lucy Virtual Machine. The goal of Lucy X is to provide a general purpose assembly language with as fewer instructions as possible, so that it is much more friendly and easier for the one who starts learning compiler techniques. In this case, unlike other low level programming language, Lucy X does not provide bit operation like shift and bit and. Instead, Lucy X uses common mathematical operators like add, sub, multiply, and divide.
@@ -17,7 +17,7 @@ Lucy X assembly language(Lucy X) is a general purpose programming language. Unli
 Inspired by MIPS and Lisp, Lucy X uses polish notation and all instructions in Lucy X are three address codes. Unlike high level programming language, Lucy X does not allow sub statements. All Lucy X instructions tends to follow the general form $operator result operand1 operand2$.
 
 \subsection{Differences between Java Byte Code}
-Unlike Java byte code, Lucy X is a dynamic typed instruction set and it does not require a stack machine. The Lucy virtual machine helps to check the type during the runtime. Moreover the Lucy X tends to be as fewer as possible while the Java byte code tends to be as more efficient as possible. Though Lucy X is a lower level programming language, but it does not provide like shift or bit operation. Different from the high level language, Lucy X does not provide control flow like if and while statement. Instead, Lucy X provides conditional jump and directly jump instructions to simulate the if and while statement. Moreover, there is no memory operation in Lucy X language since Lucy virtual machine provides unlimited register to simulate the memory operation.
+Unlike Java byte code, Lucy X is a dynamic type instruction set. The Lucy virtual machine helps to check the type during the run time. Moreover the Lucy X tends to be as fewer as possible while the Java byte code tends to be as more efficient as possible. Though Lucy X is a lower level programming language like Java byte code, but it does not provide like shift or bit operation. Lucy X provides conditional jump and directly jump instructions to simulate the \texttt{if} and \texttt{while} statement. Moreover, there is no memory operation in Lucy X. The reason of using Lucy X instead of Java byte code is that Lucy X is much easier than Java byte code and it is much easier to understand Lucy's virtual machine than Java byte code virtual machine for the one who starts learning compiler techniques.
 
 
 \section{Well-Formedness}
@@ -25,14 +25,28 @@ It is important to note that this chapter describes ‘well formed’ Lucy X ass
 \begin{lstlisting}[language=LucyX]
 mv $result $result
 \end{lstlisting}
-because the definition of \$result does not dominate all of its uses.
+because the definition of \texttt{\$result} does not dominate all of its uses. A well formed Lucy X must be syntactically and semantically correct and it must be in single static assignment form.
 
 
 \section{Instruction Style}
-Nunc iaculis sollicitudin vehicula. Morbi sollicitudin scelerisque lectus vel dapibus. Aliquam congue, lorem fermentum auctor congue, quam leo semper lectus, nec mattis justo justo eu massa. Duis vehicula dapibus purus sit amet elementum. Sed aliquet efficitur laoreet. Donec vel lectus turpis. Nullam scelerisque, sem quis pellentesque porttitor, odio lorem ullamcorper lectus, sed consectetur lacus neque at ipsum. Sed faucibus, magna at volutpat rhoncus, ex arcu blandit enim, at fringilla leo felis nec ante. Proin id orci sit amet ante volutpat interdum vitae eu elit. Ut eu sapien ante. Etiam placerat, velit ac vulputate volutpat, diam enim vehicula metus, ut sagittis augue odio vitae purus.
+Inspired by MIPS assembly language, Lucy X uses polish notation and all instructions in Lucy X are three address codes. Operands in an instruction can either be a value or a register while the target of the instruction must be a register.
+\begin{lstlisting}[language=LucyX]
+mv $a 0      // assign 0 to $a
+mv $b 1      // assign 1 to $b
+add $result $a $b   // operands are registers
+add $result $a 2    // operands are register and value
+add $result 1 2     // operands are values
+\end{lstlisting}
+The Lucy X validator will check whether the instruction is valid or not. It checks 1. whether the target is a register; 2. how many operands in the instruction; 3. whether it follows the definition of the instruction. An \texttt{InvalidInstructionException} will be thrown if an invalid instruction is detected.
 
 \subsection{Single Static Assignment Form}
-Curabitur facilisis vestibulum arcu nec convallis. Sed porta, diam non fermentum commodo, enim lectus consequat leo, non vulputate nisl massa eu nulla. Suspendisse mollis suscipit blandit. Phasellus cursus ante faucibus interdum pulvinar. Quisque nec vulputate urna, eget sodales justo. Quisque euismod ligula luctus leo hendrerit, id pretium tellus pharetra. Phasellus ac arcu nec metus ultricies molestie. Phasellus eros erat, lobortis non tellus in, aliquam molestie lectus. Donec interdum metus eu sapien hendrerit, eu iaculis nisl rutrum. Pellentesque leo felis, elementum a luctus id, venenatis ut quam.
+In compiler design, static single assignment form (often abbreviated as SSA form or simply SSA) is a property of an intermediate representation (IR), which requires that each variable is assigned exactly once, and every variable is defined before it is used. Lucy X is not in single static assignment form which means \texttt{add $result $result 1} is allowed in Lucy X's definition. But when we discuss a well formed Lucy X source code, it must be in SSA form so that it can be optimized by the optimizer in compilation time or run time.
+\begin{lstlisting}[language=LucyX]
+add $result $result 1   // not allowed
+add $0 0 0
+add $1 0 1
+add $result $0 $1       // Single Static Assignment Form
+\end{lstlisting}
 
 
 \section{Identifiers}
@@ -49,11 +63,12 @@ add result left right
 mv diff 0
 sub diff left right
 \end{lstlisting}
-If the identifier is not defined before referenced, the virtual machine will define a new register in the virtual machine and if the identifier has been defined twice, the virtual machine will throw an Overdefined Exception instead.
+If the identifier is not defined before referenced, the virtual machine will define a new register in the virtual machine and if the identifier has been defined twice, the virtual machine will throw an Overdefined Exception instead. \\
+When translating Lucy codes to Lucy X aseembly codes, to improve the readiblity of the assembly codes, the variable name will be translated to register name directly. The temporary registers will be represented by \texttt{\$0}, \texttt{\$1}, \texttt{\$2}...etc.
 
 
 \section{Scope}
-Each subroutine has its own scope in Lucy virtual machine. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy virtual machine will keep looking for the definition in its parent scope until the module’s root scope. If the identifier does not present in any scope, an Undefined Exception will be thrown but only the identifier has been defined in current scope, the Overdefined Exception will be thrown. \\
+Each subroutine has its own scope in Lucy virtual machine. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy virtual machine will keep looking for the definition in its parent scope until the module’s root scope. If the identifier does not present in any scope, an \texttt{UndefinedException} will be thrown but only the identifier has been defined in current scope, the \texttt{OverdefinedException} will be thrown. \\
 Examples are shown below:
 \begin{lstlisting}[language=LucyX]
 mv result 0
@@ -74,7 +89,7 @@ main {
 }
 \end{lstlisting}
 It can be executed correctly since the result identifier is defined at the global scope and it can be retrieved by any subroutines.
-An example with Undefined Exception and Overdefined Exception:
+An example with \texttt{UndefinedException} and \texttt{OverdefinedException}:
 \begin{lstlisting}[language=LucyX]
 mv result 0
 
@@ -100,7 +115,7 @@ main {
 
 \section{High Level Structure}
 \subsection{Module Structure}
-Lucy X assembly language is formed by modules. In Lucy programming language, the package will be directly transformed to a Lucy X module. Each Lucy X module has a module name as its identifier and is formed by global instructions and subroutines. A module with main subroutine is an executable module and the main subroutine is its entry point. Inside the module, subroutines are identified by its name and there is no two routines sharing the same name. Modules can be linked together by Lucy linker only if the target module is a main module or the two modules are sharing the same module name, i.e. they are compiling from two different files within the same package.
+Lucy X assembly language is formed by modules. In Lucy programming language, the package will be directly transformed to a Lucy X module. Each Lucy X module has a module name as its identifier and is formed by global instructions and subroutines. A module with main subroutine is an executable module and the main subroutine is its entry point. Inside the module, subroutines are identified by its name and there is no two routines sharing the same name. Modules can be linked together by Lucy linker only if the target module is a main module or the two modules are sharing the same module name, i.e. they are compiled from two different files within the same package.
 
 \subsection{Subroutine Structure}
 Lucy X modules are formed by subroutines and the main subroutine will be the entry of the whole program. As a low level assembly code, the subroutine does not provide arguments and the arguments will be retrieved from the stack of the virtual machine. \\
@@ -119,8 +134,8 @@ func main() {
 sum {
   pop a
   pop b
-  add a a b
-  push a
+  add $0 a b
+  push $0
   ret
 }
 
@@ -131,8 +146,8 @@ main {
   pop result
 }
 \end{lstlisting}
-Before calling a subroutine, the caller shall push the parameters to the stack and invoke the subroutine. The target subroutine will pop the parameter from the stack and save it to the local registers. Then it performs code inside the subroutine. The Return instruction will stop executing the subroutine and go back to the callee, and before the return instruction, the subroutine shall push the result to the stack and the callee will pop it from the stack.
-The scope of Goto instruction and Branches instruction will also be limited inside the subroutine. All jump instruction will jump to the line of the target instruction but the line number is limited inside the subroutine. For example:
+Before calling a subroutine, the caller shall push the parameters to the stack and invoke the subroutine. The target subroutine will pop the parameter from the stack and save it to the local registers. Then it performs code inside the subroutine. The Return instruction will stop executing the subroutine and return back to the caller, and before the return instruction, the subroutine shall push the result to the stack and the caller can pop it from the stack.
+The scope of \texttt{Goto} instruction and Branches instruction are also limited inside the subroutine. All jump instruction jumps to the line of the target instruction but the line number is limited inside the subroutine. For example:
 \begin{lstlisting}[language=LucyX]
 sub {
   pop a
@@ -147,4 +162,4 @@ sub {
   ret
 }
 \end{lstlisting}
-The BEQ instruction will be limited inside the sub subroutine so the front end code generator can generate codes by subroutines.
+The \texttt{BEQ} instruction will be limited inside the \texttt{sub} subroutine so the front end code generator can generate codes by subroutines.
