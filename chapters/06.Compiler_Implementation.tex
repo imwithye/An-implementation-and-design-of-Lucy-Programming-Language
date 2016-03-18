@@ -45,6 +45,14 @@ The \texttt{function} node is formed by 1. name, 2. parameter list, 3. return ty
   [Statements[Statement][Statement][Statement]]
 ]
 \end{forest}
+\subsection{Parameter}
+The \texttt{parameter} node is same as a variable declaration node, which is formed by 1. name and 2. type. The \texttt{parameter} type will only be checked during the sematic analysis time and during the code generation time, the type will be ommitted. \\
+\begin{forest}
+[Parameter
+  [VarName]
+  [VarType]
+]
+\end{forest}
 
 
 \section{Semantic Analysis}
