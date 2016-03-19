@@ -31,9 +31,9 @@ The Lucy abstract syntax tree starts from the \texttt{module} node. Source code 
 \begin{forest}
 [Module
   [Imports[Import[Module Name]][Import[Module Name]][Import[Module Name]]]
-  [Functions[Function][Function][Function]]
+  [Functions[Function][Function][...]]
 ]
-\end{forest}
+\end{forest} \\
 \subsubsection{Import}
 The \texttt{import} node is nothing more than a string of the imported module name. The imported package will be checked in the linking stage. The details will be described in the Linker Implementation chapter.
 \subsubsection{Function}
@@ -42,19 +42,62 @@ The \texttt{function} node is formed by 1. name, 2. parameter list, 3. return ty
 [Function
   [Name]
   [Parameters[Parameter[Var[Name][Type]]][Parameter[Var[Name][Type]]]]
-  [Statements[Statement][Statement][Statement]]
+  [Statements[Statement][Statement][...]]
 ]
-\end{forest}
-\subsection{Parameter}
+\end{forest} \\
+\subsubsection{Parameter}
 The \texttt{parameter} node is same as a variable declaration node, which is formed by 1. name and 2. type. The \texttt{parameter} type will only be checked during the sematic analysis time and during the code generation time, the type will be ommitted. \\
 \begin{forest}
 [Parameter
   [VarName]
   [VarType]
 ]
-\end{forest}
-
-
+\end{forest} \\
+\subsubsection{Statement}
+In the abstract syntax tree, a Lucy statement is an abstract node which could be 1. Var Definition, 2. Assignment, 3. If Else, 4. While, 5. Return and 6. Call statement. \\
+The Var Definition statement is formed by a \texttt{var} keyword var name and var type. \\
+\begin{forest}
+[VarDefinition
+  [VarName]
+  [VarType]
+]
+\end{forest} \\
+The \texttt{Assignment} statement is formed by \texttt{VarName} and \texttt{Expression}. \\
+\begin{forest}
+[Assignment
+  [VarName]
+  [Expression]
+]
+\end{forest} \\
+The \texttt{IfElse} statement is formed by \texttt{Expression} and \texttt{If} statement block and \texttt{Else} statement block. \\
+\begin{forest}
+[IfElse
+  [Expression]
+  [IfStatements [Statement][Statement][...]]
+  [ElseStatements [Statement][Statement][...]]
+]
+\end{forest} \\
+The \texttt{While} statement is formed by \texttt{Expression} and \texttt{loop} statement block. \\
+\begin{forest}
+[While
+  [Expression]
+  [LoopStatements [Statement][Statement][...]]
+]
+\end{forest} \\
+Node that in the Lucy Programming language chapter we discussed the syntactic sugars like the \texttt{for} loop, it is directly translated into while loop by adding the first and last statement. \\
+The \texttt{Return} statement is formed by a \texttt{return} keyword and an optional expression. \\
+\begin{forest}
+[Return
+  [Expression]
+]
+\end{forest} \\
+The \texttt{Call} statement is just a function call which invokes the function names. \\
+\begin{forest}
+[Call
+  [FunctionName]
+  [Parameters[Parameter][Parameter][...]]
+]
+\end{forest} \\
 \section{Semantic Analysis}
 
 
