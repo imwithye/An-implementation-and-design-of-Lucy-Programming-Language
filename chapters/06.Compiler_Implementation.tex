@@ -129,6 +129,11 @@ the \texttt{Assignment} node references two variables \texttt{a} and \texttt{b}.
 ]
 \end{forest} \\
 The \texttt{Assignment} node first looks for the \texttt{Var Declaration} node at the left siblings and if the declaration node cannot be found, it will go to the parent node and look for the \texttt{Var Declaration} node in the siblings of the parent node.
-
-
+\subsection{Type Checking}
+Since Lucy provides a static typing system, the type checking is required in the semantic analysis stage. For each \texttt{Var Declaration} node, the semantic analyzer tries to infer the type of the declared node.
+\begin{lstlisting}
+var a = 10, b = "hello", c = true, d = a, e = b?, f
+\end{lstlisting}
+For the example shown above, since the type of \texttt{a} \texttt{Number Literal} node is the number type and the declared variable a is number. So in the above \texttt{Var Declaration} statement, the types of \texttt{a}, \texttt{b}, \texttt{c} and \texttt{d} are fixed. The question mark will make the type to be optional type while still assigning the value to the variable. In this case, the type of variable \texttt{e} is optional and the value of \texttt{e} is "hello". Moreover, if the type keyword is not given, it simply assign the value with a \texttt{none} value and an optional type. \\
+The semantic analyzer first addresses all \texttt{Var Declaration} node for a \texttt{Var Name} referenced in the expression. And one of the variable is optional type and it simply infers that the type of the expression is optional. If the type is not equal to each other in the expression, a type unmatched exception will be thrown.
 \section{Code Generation}
