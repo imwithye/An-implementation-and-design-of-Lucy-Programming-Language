@@ -186,3 +186,65 @@ mv $a_$0 $2
 mv $a_$1 11
 \end{lstlisting}
 The register \texttt{\$a\_\$0} and \texttt{\$a\_\$1} are the two images of variable \texttt{a}.
+\subsubsection{IfElse and While}
+In the assembly level, Lucy X uses \texttt{goto} instruction to represent the \texttt{IfElse} statement in Lucy language. The generator first generates the codes of the condition expression and then it generates the codes for each statement blocks in the \texttt{IfElse} node. A \texttt{goto} instruction will be inserted finally. So
+\begin{lstlisting}
+func fibonacci(n) {
+  if n < 2 {
+    return n
+  } else {
+    return fibonacci(n-1) + fibonacci(n-2)
+  }
+}
+\end{lstlisting}
+will be translated to
+\begin{lstlisting}[language=LucyX]
+fibonacci {
+	pop n
+	mv $1 n
+	mv $2 2
+	les $0 $1 $2
+	bne $0 9
+	mv $3 n
+	push $3
+	ret
+	goto 24
+	mv $7 n
+	mv $8 1
+	sub $6 $7 $8
+	push $6
+	call fibonacci
+	pop $5
+	mv $11 n
+	mv $12 2
+	sub $10 $11 $12
+	push $10
+	call fibonacci
+	pop $9
+	add $4 $5 $9
+	push $4
+	ret
+}
+\end{lstlisting}
+The \texttt{While} loop uses the same strategy as the \texttt{IfElse} block.
+\subsubsection{Return}
+The \texttt{Return} statement is simply translated into the \texttt{ret} instruction. If the \texttt{Return} statement returns a value or an expression, then the generator first generates the code for the value or expression and then save it to the stack memory and invoke the \texttt{ret} instruction. So
+\begin{lstlisting}
+return 5 + 10
+\end{lstlisting}
+will be translated to
+\begin{lstlisting}[language=LucyX]
+add $0 5 10
+push $0
+ret
+\end{lstlisting}
+\subsubsection{Call}
+The \texttt{Call} statement is simply translated into the \texttt{call} instruction. Since the subroutine in the Lucy X assembly codes does not have a parameter list, so before invoking the subroutine, the parameter must be pushed into the stack memory. So
+\begin{lstlisting}
+fibonacci(5)
+\end{lstlisting}
+will be translated to
+\begin{lstlisting}[language=LucyX]
+push 5
+call fibonacci
+\end{lstlisting}
