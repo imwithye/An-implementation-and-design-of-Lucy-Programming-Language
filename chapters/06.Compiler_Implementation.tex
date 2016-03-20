@@ -107,8 +107,28 @@ The \texttt{Call} statement is just a function call which invokes the function n
   [Parameters[Parameter][Parameter][...]]
 ]
 \end{forest} \\
-\section{Semantic Analysis}
 
+
+\section{Semantic Analysis}
+The semantic analyzer checks the variable declaration and the type for each statement. First of all, undeclared variables cannot be referenced in the statement. The variable scope will be limited inside the functions. Second, it checks the type association for each declared variable and expression in the abstract syntax tree. Last but not least, it checks the \texttt{Return} statement in every branch in the function definition.
+\subsection{Variable Declaration}
+The Lucy code is formed by functions and the function body is formed by an array of statements. The \texttt{Var Declaration} statement is an statement inside the array. For an abstract syntax tree, for example, the tree shown below, \\
+\begin{forest}
+[Statements
+  [VarDeclaration[VarName[a]][Expression[NumberLiteral[13]]]]
+  [VarDeclaration[VarName[b]][Expression[NumberLiteral[17]]]]
+  [Assignment[VarName[a]][AddExpression[VarName[a]][VarName[b]]]]
+]
+\end{forest} \\
+the \texttt{Assignment} node references two variables \texttt{a} and \texttt{b}. In the variable declaration checking stage, the analyzer looks for the \texttt{Var Declaration} node at the left siblings of the \texttt{Assignment} node. For a complex abstract syntax tree: \\
+\begin{forest}
+[Statements
+  [VarDeclaration[VarName[a]][Expression[NumberLiteral[13]]]]
+  [VarDeclaration[VarName[b]][Expression[NumberLiteral[17]]]]
+  [IfElse[Condition[EquExpression[VarName[a]][NumberLiteral[13]]]][Statements[[Assignment[VarName[a]][AddExpression[VarName[a]][VarName[b]]]]]]]
+]
+\end{forest} \\
+The \texttt{Assignment} node first looks for the \texttt{Var Declaration} node at the left siblings and if the declaration node cannot be found, it will go to the parent node and look for the \texttt{Var Declaration} node in the siblings of the parent node.
 
 
 \section{Code Generation}
