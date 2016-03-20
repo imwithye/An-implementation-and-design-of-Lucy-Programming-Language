@@ -170,3 +170,19 @@ add $1 10 11
 add $2 $0 $1
 \end{lstlisting}
 The register starting with \texttt{\$} is the temporary register.
+\subsubsection{Var Declaration and Assignment}
+In the Lucy X assembly code, there is no \texttt{Var Declaration} instruction. If the register is not defined, the virtual machine will simply create one and assign it with none value. So the \texttt{Var Declaration} node will be directly translated into an \texttt{Assignment} node. \\
+To generate an \texttt{Assignment} node, the generator first generates codes for the right hand side expression using the strategy mentioned above and then add a \texttt{mv} instruction after the generation. So
+\begin{lstlisting}
+a = 5 + (10 + 11)
+a = 11
+\end{lstlisting}
+will be translated to
+\begin{lstlisting}[language=LucyX]
+mv $0 5
+add $1 10 11
+add $2 $0 $1
+mv $a_$0 $2
+mv $a_$1 11
+\end{lstlisting}
+The register \texttt{\$a\_\$0} and \texttt{\$a\_\$1} are the two images of variable \texttt{a}.
