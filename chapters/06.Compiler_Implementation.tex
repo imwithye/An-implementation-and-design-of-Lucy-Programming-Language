@@ -157,3 +157,16 @@ add {
 \end{lstlisting}
 After generating the parameter list, the generator starts visiting the statements inside the function body.
 \subsection{Statement Generation}
+The statement generation will read the statement in the statement array one by one and generate for them. A counter is used to count the number of instructions generated of each statement. And since the target Lucy X code will be in SSA form, i.e. each variable can only be assigned once, temporary registers are used to prevent the reassignment.
+\subsubsection{Expression Generation}
+For a simple expression, for example the \texttt{Var Name} node and the \texttt{Literal Node} in the syntax tree, the generator simply uses them in the Lucy X instructions. And for a binary expression, the generator first generates the code for the left hand side expression and save the result to a temporary register and then it generates the code for the right hand side experssion and saves the result into a temporary register. Finally the generator add them together. So
+\begin{lstlisting}
+5 + (10 + 11)
+\end{lstlisting}
+will be translated to
+\begin{lstlisting}[language=LucyX]
+mv $0 5
+add $1 10 11
+add $2 $0 $1
+\end{lstlisting}
+The register starting with \texttt{\$} is the temporary register.
