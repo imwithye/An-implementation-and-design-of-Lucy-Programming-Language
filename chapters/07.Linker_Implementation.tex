@@ -18,8 +18,41 @@ string:len {
 In this case, inside a package, even the two functions are in different files, they cannot be the same name. Otherwise when the global linker links all module files into one module, the naming will be duplicated and an \texttt{OverdefinedException} will be thrown. But if these two functions are in two different packages, it will be fine if they have the same name since they will be prefixed their package's name.
 
 \section{Module Representation}
-Cras vitae diam urna. Pellentesque non mi sodales, cursus velit in, dapibus dolor. Nulla id urna viverra eros fermentum vulputate vitae sit amet lorem. Curabitur varius viverra sollicitudin. In feugiat ultrices commodo. Duis ullamcorper sapien a dolor suscipit luctus. Duis quis nunc sed leo consequat congue ut sit amet lorem. Vivamus finibus mi consectetur risus efficitur eleifend. Aenean consequat ultricies molestie. Quisque at leo non sapien pulvinar elementum. Vivamus sit amet magna varius turpis suscipit volutpat. In hac habitasse platea dictumst. Praesent a libero id ipsum convallis interdum.
+The linker will read in different module files and finally produce one final module. If the module files are some partial files of the package, the linker will merge them into one module and if the one of the module files is a main module, the linker will merge them and produce a new main module. Note that if the modules coming from different packages and there is no main module in those files, the linker will generate an exception, i.e. linker cannot link two modules from different packages except one of them is main module.
+\begin{lstlisting}[language=LucyX]
+; file 1
+; module name: string
+string:len{}
 
+; file 2
+; module name: string
+string:charAt{}
+
+; by default, it will be linked and merged into file string
+string:len{}
+string:charAt{}
+\end{lstlisting}
+The above example shows that to link a module, the linker simply merges all modules files into one. If the subroutine is already in the module, then an \texttt{OverdefinedException} will be thrown.
+\begin{lstlisting}[language=LucyX]
+; string
+string:len{}
+string:charAt{}
+
+; array
+array:len{}
+array:remove{}
+
+; main
+main{}
+
+; by default, it will merged into file main
+string:len{}
+string:charAt{}
+array:len{}
+array:remove{}
+main{}
+\end{lstlisting}
+Linking an executable module is a little different with linking a pacakage. To link a package, the linker just merge all module files into one module and the module name will not be changed. In this case, the package name cannot be different in different module files. To link an executable module, the module files can come from different packakges and the linker will create a main module then all subroutines will be pushed into the main module.
 
 \section{Linker Implementation}
 Duis consequat mauris a dolor ultrices eleifend. Quisque nulla est, dictum et augue ut, iaculis aliquet sem. Integer in sem dapibus, suscipit est eu, pellentesque velit. Praesent lacus massa, scelerisque ac rutrum nec, sodales nec risus. Aenean sed rhoncus nunc. Ut eget elit sapien. Aenean iaculis velit vel porta consequat. Ut eros ex, rutrum dapibus ex varius, gravida condimentum sapien. Etiam finibus, nulla sed sodales tincidunt, nulla purus malesuada nunc, at imperdiet eros lorem ut dui. In ullamcorper eget eros in euismod. Donec ipsum mi, viverra id urna et, iaculis aliquam tellus. Duis lobortis pellentesque elit, ut tempus mauris pretium sollicitudin.
