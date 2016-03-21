@@ -1,5 +1,5 @@
 \chapter{Linker Implementation}
-The Lucy compiler aims to compile the Lucy code into Lucy X module with solving the local linkage. The \texttt{Import} keyword is reserved for global linkage. The global linkage is solved during linking time by the Lucy linker. This chapter first discusses how the routine and module are represented and how the global linking is solved for those global function calls. Then we discuss the detailed implementation of the Lucy linker.
+The Lucy compiler aims to compile the Lucy code into Lucy X module with solving the local linkage. The \texttt{Import} keyword is reserved for global linkage. The global linkage is solved during linking time by the Lucy linker. This chapter first discusses how the routine and module are represented and how the global linking is solved for those global function calls. Then we discuss the global semantic analysis which is used for checking the correctness of the global linking.
 
 
 \section{Subroutine Representation}
