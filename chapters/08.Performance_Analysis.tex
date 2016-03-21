@@ -5,7 +5,7 @@ Lucy tends to be a simple and general purpose programming language. Unlike the C
 \section{Performance Analysis}
 \subsection{Implementation of Lucy X and Virtual Machine}
 In the Lucy X assembly language, the operand can either be a register or value. If the operand is a register, the virtual machine will first fetch the value from the register and then perform the operation over two values. As we discussed in the virtual machine chapter, the registers are stored in the \texttt{Scope} class. The \texttt{get} method is used to fetch the register from the virtual machine. Usually in the assembly code, the instructions will be directly performed on the CPU's register. But in Lucy's virtual machine, the register first need to be fetched from the \texttt{Scope} class and then map the Java object to the register in the Java virtual machine. Here is an example of the \texttt{add} instruction.
-\begin{lstlisting}[language=java]
+\begin{lstlisting}[language=Java]
 // The getValue method will return a value.
 // If the operand is a value, then it directly return the value.
 // If the operand is a register, then it get the register from
@@ -37,6 +37,36 @@ user 0m0.015s
 sys  0m0.045s
 \end{lstlisting}
 The code written in C is about more than 40 times faster than Lucy.
+
+\subsection{Code Generation}
+To simply the code generation process, the Lucy compiler uses as many temporary registers as possible. For example, when generating the expression node in the abstract tree, Lucy compiler first generates the left and right hand side part recursively and finally generates the operation.
+\begin{lstlisting}
+sum = (10 + b) + (a + 20)
+\end{lstlisting}
+will be translated into
+\begin{lstlisting}[language=LucyX]
+mv $0 b
+mv $1 10
+add $2 $0 $1
+mv $3 a
+mv $4 20
+add $5 $3 $4
+add $6 $2 $5
+mv sum $6
+\end{lstlisting}
+The result will be finally saved in the register \texttt{\$6} and then the \texttt{mv} instruction assigns the result to the \texttt{sum} register. This code is in SSA form and register is only assigned once. The increasing number of registers will lead to bigger memory usage and more redundant instructions. In this case, without any optimization, the speed of Lucy program will be much slower than other languages. \\
+A possible solution is to introduce the code optimization stage after linking. For the above example, the constant propagation pass will remove a lot of redundant instructions.
+\begin{lstlisting}[language=LucyX]
+add $2 b 10
+add $5 a 20
+add sum $2 $5
+\end{lstlisting}
+To achieve better memory usage, temporary registers can be folded in the optimization pass.
+\begin{lstlisting}[language=LucyX]
+add $2 b 10
+add sum a 20
+add sum $2 sum
+\end{lstlisting}
 
 \section{Issues}
 Duis consequat mauris a dolor ultrices eleifend. Quisque nulla est, dictum et augue ut, iaculis aliquet sem. Integer in sem dapibus, suscipit est eu, pellentesque velit. Praesent lacus massa, scelerisque ac rutrum nec, sodales nec risus. Aenean sed rhoncus nunc. Ut eget elit sapien. Aenean iaculis velit vel porta consequat. Ut eros ex, rutrum dapibus ex varius, gravida condimentum sapien. Etiam finibus, nulla sed sodales tincidunt, nulla purus malesuada nunc, at imperdiet eros lorem ut dui. In ullamcorper eget eros in euismod. Donec ipsum mi, viverra id urna et, iaculis aliquam tellus. Duis lobortis pellentesque elit, ut tempus mauris pretium sollicitudin.
