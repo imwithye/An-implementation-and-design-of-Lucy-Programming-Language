@@ -3,8 +3,40 @@ Lucy tends to be a simple and general purpose programming language. Unlike the C
 
 
 \section{Performance Analysis}
-Pellentesque viverra eu tortor a maximus. Cras ultrices consectetur pretium. Sed vitae neque ipsum. Integer nisl augue, facilisis ut risus et, rutrum cursus urna. Donec ut rhoncus tellus. Ut lobortis felis orci, id cursus purus viverra sed. Suspendisse potenti. Duis nec ante eu nibh imperdiet feugiat. Nam feugiat quam libero, id consectetur mi viverra vitae. Vivamus varius lectus at pulvinar ornare. Nam ut est sed ligula volutpat faucibus. Praesent hendrerit pretium turpis, ut sagittis leo accumsan ultrices. Duis et rutrum nibh. Nunc commodo, massa nec pellentesque lacinia, ante metus tristique metus, vitae eleifend massa justo sed ante. Nulla et eros eget sem laoreet lobortis at vitae elit.
+\subsection{Implementation of Lucy X and Virtual Machine}
+In the Lucy X assembly language, the operand can either be a register or value. If the operand is a register, the virtual machine will first fetch the value from the register and then perform the operation over two values. As we discussed in the virtual machine chapter, the registers are stored in the \texttt{Scope} class. The \texttt{get} method is used to fetch the register from the virtual machine. Usually in the assembly code, the instructions will be directly performed on the CPU's register. But in Lucy's virtual machine, the register first need to be fetched from the \texttt{Scope} class and then map the Java object to the register in the Java virtual machine. Here is an example of the \texttt{add} instruction.
+\begin{lstlisting}[language=java]
+// The getValue method will return a value.
+// If the operand is a value, then it directly return the value.
+// If the operand is a register, then it get the register from
+// the virtual machine
+// then return the value inside the register.
+// vm is the virtual machine instance and the number is the
+// position of the operand.
+Value v1 = getValue(vm, 1);
+Value v2 = getValue(vm, 2);
+Register result = getRegister(vm, 0);
+result.assignValue(v1.add(v2));
+\end{lstlisting}
+The above code shows that, to perform an add operation, the virtual machine needs to get the register and then save to the target register. On a real machine, the register is directly addressed by the machine code but in Lucy VM, it requires additional memory operation to get the registers. Assuming the all operation can be done in $O(1)$ time in the \texttt{HashMap} and there is no additional memory operation when Java executing this method, it still requires 3 more instructions to perform the add operation. Here is an example of comparing the Lucy and C's implementation of calculating fibonacci number 20 :
+\begin{lstlisting}
+$gcc fibonacci.c -o fibonacci
+$time ./fibonacci
+6765
 
+real 0m0.026s
+user 0m0.000s
+sys  0m0.000s
+
+$lucy -c fibonacci.ly fibonacci.lyo
+$time lucy fibonacci.lyo
+6765
+
+real 0m1.083s
+user 0m0.015s
+sys  0m0.045s
+\end{lstlisting}
+The code written in C is about more than 40 times faster than Lucy.
 
 \section{Issues}
 Duis consequat mauris a dolor ultrices eleifend. Quisque nulla est, dictum et augue ut, iaculis aliquet sem. Integer in sem dapibus, suscipit est eu, pellentesque velit. Praesent lacus massa, scelerisque ac rutrum nec, sodales nec risus. Aenean sed rhoncus nunc. Ut eget elit sapien. Aenean iaculis velit vel porta consequat. Ut eros ex, rutrum dapibus ex varius, gravida condimentum sapien. Etiam finibus, nulla sed sodales tincidunt, nulla purus malesuada nunc, at imperdiet eros lorem ut dui. In ullamcorper eget eros in euismod. Donec ipsum mi, viverra id urna et, iaculis aliquam tellus. Duis lobortis pellentesque elit, ut tempus mauris pretium sollicitudin.
