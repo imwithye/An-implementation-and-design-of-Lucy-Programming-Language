@@ -1,9 +1,21 @@
 \chapter{Linker Implementation}
-The Lucy compiler aims to compile the Lucy code into Lucy X module with solving the local linkage. The \texttt{Import} keyword is reserved for global linkage. The global linkage is solved during linking time by the Lucy linker. This chapter first discusses how the routine and module are represented and how the global linking is solved for those global function calls. Then we discuss the detailed implmentation of the Lucy linker.
+The Lucy compiler aims to compile the Lucy code into Lucy X module with solving the local linkage. The \texttt{Import} keyword is reserved for global linkage. The global linkage is solved during linking time by the Lucy linker. This chapter first discusses how the routine and module are represented and how the global linking is solved for those global function calls. Then we discuss the detailed implementation of the Lucy linker.
 
-\section{Routine Representation}
-Pellentesque viverra eu tortor a maximus. Cras ultrices consectetur pretium. Sed vitae neque ipsum. Integer nisl augue, facilisis ut risus et, rutrum cursus urna. Donec ut rhoncus tellus. Ut lobortis felis orci, id cursus purus viverra sed. Suspendisse potenti. Duis nec ante eu nibh imperdiet feugiat. Nam feugiat quam libero, id consectetur mi viverra vitae. Vivamus varius lectus at pulvinar ornare. Nam ut est sed ligula volutpat faucibus. Praesent hendrerit pretium turpis, ut sagittis leo accumsan ultrices. Duis et rutrum nibh. Nunc commodo, massa nec pellentesque lacinia, ante metus tristique metus, vitae eleifend massa justo sed ante. Nulla et eros eget sem laoreet lobortis at vitae elit.
 
+\section{Subroutine Representation}
+In Lucy X assembly language, functions are represented as subroutines. A subroutine provides scope isolation and stack memory for parameter passing and function execution. For each subroutine produced by the Lucy compiler, it will be prefixed with the module name to differentiate the subroutines.
+\begin{lstlisting}
+package "string"
+
+func len(s: string) {}
+\end{lstlisting}
+will be translated to
+\begin{lstlisting}[language=LucyX]
+string:len {
+  pop s
+}
+\end{lstlisting}
+In this case, inside a package, even the two functions are in different files, they cannot be the same name. Otherwise when the global linker links all module files into one module, the naming will be duplicated and an \texttt{OverdefinedException} will be thrown. But if these two functions are in two different packages, it will be fine if they have the same name since they will be prefixed their package's name.
 
 \section{Module Representation}
 Cras vitae diam urna. Pellentesque non mi sodales, cursus velit in, dapibus dolor. Nulla id urna viverra eros fermentum vulputate vitae sit amet lorem. Curabitur varius viverra sollicitudin. In feugiat ultrices commodo. Duis ullamcorper sapien a dolor suscipit luctus. Duis quis nunc sed leo consequat congue ut sit amet lorem. Vivamus finibus mi consectetur risus efficitur eleifend. Aenean consequat ultricies molestie. Quisque at leo non sapien pulvinar elementum. Vivamus sit amet magna varius turpis suscipit volutpat. In hac habitasse platea dictumst. Praesent a libero id ipsum convallis interdum.
