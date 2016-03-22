@@ -52,7 +52,7 @@ array:len{}
 array:remove{}
 main{}
 \end{lstlisting}
-Linking an executable module is a little different with linking a pacakage. To link a package, the linker just merge all module files into one module and the module name will not be changed. In this case, the package name cannot be different in different module files. To link an executable module, the module files can come from different packakges and the linker will create a main module then all subroutines will be pushed into the main module.
+Linking an executable module is a little different with linking a package. To link a package, the linker just merge all module files into one module and the module name will not be changed. In this case, the package name cannot be different in different module files. To link an executable module, the module files can come from different packages and the linker will create a main module then all subroutines will be pushed into the main module.
 
 \section{Global Semantic Analysis}
 After linking separated modules files into one file, the global semantic analysis will be performed to check the correctness of the global linking. It checks the routine definition to ensure the all \texttt{call} instruction can be correctly executed. \\
