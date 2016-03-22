@@ -13,7 +13,7 @@ The Lucy virtual machine(Lucy VM) is an open protocol, a low level virtual machi
 \subsection{Goal of Lucy Virtual Machine}
 Lucy virtual machine is a general purpose virtual machine, and it simulates the real computer at an abstract level. Lucy VM tends to be as simple as possible. The goal of Lucy VM is to provide a completed virtual system without increasing the complexity. Lucy VM is designed for Lucy X and driven by Lucy X only, which is a good start point for those who are interested in compiler techniques.
 
-\subsection{Differences between Java Stack Machine}
+\subsection{Differences between Java Stack Machine and Lucy Virtual Machine}
 A Java virtual machine (JVM) is an abstract computing machine that enables a computer to run a Java program. Java virtual machine is a stack machine and driven by Java byte code. Unlike Lucy VM, Java uses stack to hold result of the instruction. Operands shall be pushed into the stack before calling the operator. After calculating the result, operand will be popped from the stack memory. Moreover, Java byte code is a type sensitive language while registers in Lucy VM are dynamic type.
 
 
