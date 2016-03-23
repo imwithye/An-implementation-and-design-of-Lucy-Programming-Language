@@ -18,13 +18,21 @@ Value v2 = getValue(vm, 2);
 Register result = getRegister(vm, 0);
 result.assignValue(v1.add(v2));
 \end{lstlisting}
-The above code shows that, to perform an add operation, the virtual machine needs to get the register and then save to the target register. On a real machine, the register is directly addressed by the machine code but in Lucy VM, it requires additional memory operation to get the registers. Assuming the all operations can be done in $O(1)$ time in the \texttt{HashMap} and there is no additional memory operation when Java executing this method, it still requires 3 more instructions to perform the add operation. Here is an example of comparing the Lucy and C's implementation of calculating fibonacci number 20 :
+The above code shows that, to perform an add operation, the virtual machine needs to get the register and then save to the target register. On a real machine, the register is directly addressed by the machine code but in Lucy VM, it requires additional memory operation to get the registers. Assuming the all operations can be done in $O(1)$ time in the \texttt{HashMap} and there is no additional memory operation when Java executing this method, it still requires 3 more instructions to perform the add operation. Here is an example of comparing the Lucy, C's implementation and Java's implementation of calculating fibonacci number 20:
 \begin{lstlisting}
 $gcc fibonacci.c -o fibonacci
 $time ./fibonacci
 6765
 
 real 0m0.026s
+user 0m0.000s
+sys  0m0.000s
+
+$javac Fibonacci.java
+$time java Fibonacci
+6765
+
+real 0m0.121s
 user 0m0.000s
 sys  0m0.000s
 
@@ -36,7 +44,7 @@ real 0m1.083s
 user 0m0.015s
 sys  0m0.045s
 \end{lstlisting}
-The code written in C is about more than 40 times faster than Lucy.
+The code written in C is about more than 40 times faster and the code in Java is about 9 times faster than Lucy
 
 \subsection{Code Generation}
 To simply the code generation process, the Lucy compiler uses as many temporary registers as possible. For example, when generating the expression node in the abstract tree, Lucy compiler first generates the left and right hand side part recursively and finally generates the operation.
