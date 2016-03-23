@@ -1,0 +1,36 @@
+%!TEX root = ../dissertation.tex
+\chapter{Dead Argument Elimination}
+
+\section{Introduction}
+This pass deletes dead arguments from internal functions.  Dead argument elimination removes arguments which are directly dead, as well as arguments only passed into function calls as dead arguments of other functions. This pass also deletes dead return values in a similar way. This pass is often useful as a cleanup pass to run after aggressive interprocedural passes, which add possibly-dead arguments or return values.
+
+\section{The LLVM’s Implementation}
+The LLVM optimizer is formed by different passes. The dead argument elimination optimization is done by dae pass. The code of dae pass can be got from  \url{http://llvm.org/docs/doxygen/html/DeadArgumentElimination_8cpp_source.html}. In LLVM’s implementation, there 2 status of a variable:
+\begin{enumerate}
+\item Live: The variable is live.
+\item MaybeLive: The variable may be live.
+\end{enumerate}
+During our initial pass over the program, we determine that things are either alive or maybe alive. We don't mark anything explicitly dead (even if we know they are), since anything not alive with no registered uses (in Uses) will never be marked alive and will thus become dead in the end.
+
+\subsection{DeleteDeadVarargs}
+The DeleteDeadVarargs will be invoked whenever a function is parsed. The C function allows developer to pass in variable arguments. For example:
+\begin{lstlisting}[language=c]
+int sum(int count, ...) {
+  va_list valist;
+  int sum = 0;
+  va_start(valist, count);
+  for (i = 0; i < count; i++) {
+    sum += va_arg(valist, int);
+  }
+  va_end(valist);
+  return sum;
+}
+\end{lstlisting}
+The first parameter of the sum function takes the count of the following parameters and by using a for loop, the function evaluate the sum of those integers. Since to iterate all parameters passed in, the function requires to use \texttt{va\_list}, \texttt{va\_start} and \texttt{va\_end} macro. The DeleteDeadVarargs arguments will test whether those macros are in the function or not. If those macros are not in the function, we will know the function does not need variable arguments, in other words, those variable arguments are dead in this function and we can simply remove them. \\
+After removing the arguments from the function stack, we have to adjust all function calls of this function. We are required to remove all arguments after the first argument from the function call so that the linker will work correctly.
+
+\subsection{RemoveDeadArgumentsFromCallers}
+Checks if the given function has any arguments that are unused, and changes the caller parameters to be undefined instead. This method will not remove the argument from the memory stack, instead, it gets all users of the function and if the parameter is unused in the function, this method set the the corresponding argument to undefined value. Thus, the value of that argument will not be evaluated.
+
+\subsection{RemoveDeadStuffFromFunction}
+Remove any arguments and return values from F that are not in LiveValues. Transform the function and all of the callees of the function to not have these arguments and return values.
