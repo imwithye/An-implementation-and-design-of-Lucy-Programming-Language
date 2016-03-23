@@ -19,6 +19,8 @@
 \usepackage{listings}
 \usepackage{listings-lucy}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
 \usepackage{forest}
 \RaggedRight
 \RequirePackage{graphicx}

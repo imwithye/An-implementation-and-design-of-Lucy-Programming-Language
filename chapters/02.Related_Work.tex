@@ -12,7 +12,14 @@ MIPS is a reduced instruction set computer (RISC) instruction set architecture (
 
 
 \section{LLVM's bit code, Static Single Assignment Form}
-The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. LLVM can be used as a compiler framework, where you provide the "front end" (parser and lexer) and the "back end" (code that converts LLVM's representation to actual machine code). In the Clang compiler, which is a front end and a compiler driver of LLVM, it translates the C code to LLVM bit code.
+The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. LLVM can be used as a compiler framework, where you provide the "front end" (parser and lexer) and the "back end" (code that converts LLVM's representation to actual machine code). In the Clang compiler, which is a front end and a compiler driver of LLVM, it translates the C code to LLVM bit code, or LLVM IR. \\
+\begin{figure}[h]
+\centering
+\includegraphics[width=10cm]{LLVM}
+\end{figure}
+Developed by Ron Cytron, Jeanne Ferrante, Barry K. Rosen, Mark N. Wegman, and F. Kenneth Zadeck, researchers at IBM in the 1980s, static single assignment form (often abbreviated as SSA form or simply SSA) is a property of an intermediate representation (IR), which requires that each variable is assigned exactly once, and every variable is defined before it is used. Existing variables in the original IR are split into versions, new variables typically indicated by the original name with a subscript in textbooks, so that every definition gets its own version. In SSA form, use-def chains are explicit and each contains a single element. \\
+LLVM IR is a Static Single Assignment (SSA) based representation that provides type safety, low-level operations, flexibility, and the capability of representing ‘all’ high-level languages cleanly. The LLVM optimizer will then optimize the code of the LLVM IR and finally the backend generator will generate the machine code for every instructions in LLVM IR. \\
+
 
 \section{Java \& Python, Instruction over Virtual Machine}
 Aliquam feugiat turpis at metus ultrices, quis elementum justo gravida. Suspendisse mi lacus, aliquet at nisi at, varius aliquet sem. Donec venenatis, arcu eget feugiat suscipit, eros sem maximus ante, quis varius sem metus non nulla. Mauris euismod elit mi, ac viverra magna cursus a. Morbi id elementum nisi, ac varius turpis. Etiam vehicula, leo non faucibus aliquam, libero leo pulvinar ipsum, id hendrerit justo sem maximus lectus. Vivamus semper elit ut metus iaculis, pellentesque convallis urna vulputate. Pellentesque gravida porttitor dignissim. Sed sit amet elit nulla. Sed consequat faucibus purus, in gravida arcu tristique ac. Nullam et pellentesque purus. Nulla facilisi. Pellentesque finibus dolor at sem ornare, et vulputate mi consequat. Donec a leo at lorem convallis mattis.
