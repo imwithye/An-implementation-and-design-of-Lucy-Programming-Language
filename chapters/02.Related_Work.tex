@@ -8,7 +8,7 @@ In current high level programming language world, C is always considered as a lo
 Unlike other two languages, the Python programming language is dynamic type and every thing in python is an object. The low level representation of Python variable is the \texttt{PyObject} struct in C. The run time type is stored in the \texttt{PyObject} and the Python virtual machine checks the correctness of the type for every assignment.
 
 \section{MIPS, A reduced Assembly Language}
-Etiam felis urna, consectetur a iaculis ut, tempor vitae magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id laoreet ante. Donec pharetra nisl neque, in condimentum purus condimentum sed. Curabitur mollis erat nec diam hendrerit iaculis. Quisque elementum aliquet lacinia. Nulla consectetur molestie scelerisque. Duis orci felis, fringilla non erat at, consectetur pharetra leo. Mauris orci urna, dictum et fringilla id, feugiat vel elit. Cras ultrices nulla nisi, vel euismod diam elementum nec. Maecenas ut mollis leo, et rutrum nibh. Aenean in purus pulvinar, sollicitudin eros eu, varius lectus. Donec eget congue mauris.
+MIPS is a reduced instruction set computer (RISC) instruction set architecture (ISA) developed by MIPS Technologies. The MIPS code is a 3 address codes and there are 3 operands in one instruction at the same time. An example MIPS code is the \texttt{add} instruction: \texttt{add \$0 \$0 \$1}. The first operand in MIPS is the target operand which stores the result. The second and third operands are the operand of the operation. This instruction style allows the instruction set to be in SSA form, in which case, every variable in the code is assigned only once.
 
 
 \section{LLVM's bit code, Static Single Assignment Form}
