@@ -162,8 +162,8 @@
 	\begin{center}
 	\Huge \textcolor{SchoolColor}{\thetitle} \normalsize \\
 	\vspace{100pt}
-	\textsc{a dissertation presented \\ by\\
-	\theauthor\\ to\\ The Department of \@department\\
+	\textsc{final year report presented \\ by\\
+	\theauthor(U1220539K)\\ to\\ The Department of \@department\\
 	\vspace{12pt}
 	in partial fulfillment of the requirements\\
 	for the degree of\\ \@degree\\
