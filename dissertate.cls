@@ -18,6 +18,7 @@
 \usepackage{ragged2e}
 \usepackage{listings}
 \usepackage{listings-lucy}
+\usepackage{hyperref}
 \usepackage{forest}
 \RaggedRight
 \RequirePackage{graphicx}
