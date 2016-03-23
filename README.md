@@ -1,12 +1,3 @@
-# Dissertate
-
-## Getting started
-1. Install LaTeX. For Mac OS X, we recommend MacTex (http://tug.org/mactex/); for Windows, MiKTeX (http://miktex.org/); and for Ubuntu, Tex Live (`sudo apt-get install texlive-full`)
-2. Install the default fonts: EB Garamond, Lato, and Source Code Pro. The files are provided in `fonts/EB Garamond`, `fonts/Lato`, and `fonts/Source Code Pro`.
-3. Personalize the document by filling out your name and all the other info in `frontmatter/personalize.md`.
-4. Build your dissertation with `build.command`, located in the `scripts` directory (e.g., you can `cd` into the main directory and then run `./scripts/build.command`).
-
-## FAQ
-
-### How do I make the text justified instead of ragged right?
-Remove or comment out the line `\RaggedRight` from the .cls file.
+An implementation and design of Lucy programming language
+===
+This projects involves creating a new programming language named Lucy and its low level infrastructure. Lucy is a dynamic type language with static type checking. The goal of Lucy is to provide an elegant language syntax without losing those safe and powerful features. Lucy X and Lucy virtual machine is the low level infrastructure of Lucy which are designed to be as simple as possible. Lucy X and Lucy virtual machine aim to provide a mini compiler infrastructure for constructing a compiler for those who are interested in compiler techniques and designs. This report describes the syntaxes and features of Lucy and Lucy X as well as the implementation of Lucy compiler and Lucy virtual machine.
