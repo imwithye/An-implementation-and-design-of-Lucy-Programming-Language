@@ -23,16 +23,16 @@ If you have written code in C or C++, this code will be very familiar to you. Th
 Lucy does not requires the main function to return an \texttt{int} number as the program's exiting code and in fact, the virtual machine will detect the return statement during run time and return a none value if the function does not return anything. The detailed description of the function behavior will be introduced in the function section. Though Lucy is a dynamic type programming language, i.e. type of the the variable can be changed during the run time, Lucy still requires compiling and linking to the Lucy X assembly code so that it can be interpreted by Lucy Virtual Machine. The mechanism behind Lucy, Lucy X and its virtual machine will be discussed in the chapters of Lucy X Assembly Language and Lucy Virtual Machine. Lucy aims to provide a way to mix static type and dynamic type. The front-end semantic checker will ensure the correctness of the static type assignment, and the virtual machine, which provides a run time checking system, will ensure the correctness of the dynamic type assignment. The trade-offs of this syntax design and the implementation will be discussed in the syntax design section and the implementation chapter.
 
 \subsection{Simple Value}
-Lucy uses \texttt{var} keyword to create a variable and the initial value of the variable will be set to none if no type keyword is given.
+Lucy uses the keyword \texttt{var} to create a variable and the initial value of the variable will be set to none if no keyword specifying the type is given.
 \begin{lstlisting}
 var a              // a is a optional type with none value
 var a = 10         // a is a number type with number value 10
 var a: number      // a is a number type with number value 0
 var a: number = 10 // a is a number type with number value 10
 \end{lstlisting}
-A comma can be used to separate the var declaration and to assign the variable a static type, the type keyword should be present after every single declaration. For example:
+A comma can be used to separate multiple var declarations and to assign the variable a static type, the keyword representing the type should be present after every single declaration. For example:
 \begin{lstlisting}
-var a, b: number   // a is optional type but b is number type
+var a, b: number   // a is optional(underdetermined) type but b is number type
 var a: number, b: number      // both a and b are number type
 \end{lstlisting}
 The default values of the build-in types are set as following:
@@ -70,7 +70,7 @@ result2 == [0, 1, 0, 2]  // type of result2 is [number]
 \end{lstlisting}
 
 \subsection{Type}
-Lucy is a dynamic type programming language, which means the type of the variable can be changed during the runtime. Lucy also provides a static type checking system and introduces the optional type the the language. In Lucy, a variable without associating a type keyword will be considered as an optional type value. But if the initial value of the variable has a static type, the type of the variable will be inferred from that static type. The question mark will force the static type to be a optional type. Only the optional type variables can be changed during runtime. For example:
+Lucy is a dynamic type programming language, which means the type of the variable can be changed during the runtime. Lucy also provides a static type checking system and introduces the optional type the language. In Lucy, a variable without associating a type keyword will be considered as an optional type value. But if the initial value of the variable has a static type, the type of the variable will be inferred from that static type. The question mark will force the static type to be a optional type. Only the optional type variables can be changed during runtime. For example:
 \begin{lstlisting}
 var a = 0      // a is a variable of number type
 var b = 0?     // b is optional type with value 0
@@ -113,7 +113,7 @@ func main() {
   var d = add_n(0, 1)             // valid
 }
 \end{lstlisting}
-In the function definition, if there is no type keyword after the function signature, Lucy will treat it as optional typed function. If the function returns a value, it will simply return the result to the caller. If the function does not return any thing, the function will return a none value to the caller. The detailed behavior of the function will be discussed in the function section.
+In the function definition, if there is no keyword representing the type after the function signature, Lucy will treat it as optional typed function. If the function returns a value, it will simply return the result to the caller. If the function does not return any thing, the function will return a none value to the caller. The detailed behavior of the function will be discussed in the function section.
 
 \subsection{Control Flow}
 Lucy uses \texttt{if} block and \texttt{while} loop conditional flows. The \texttt{if} statement will first check the value of the condition expression and only if the expression has a boolean value true, the statements inside if block will be executed. The \texttt{else} keyword is used for handling the other cases. Braces around the body are required to clarify the bound of the statements.
@@ -124,7 +124,7 @@ if expression {
   // statements if expression is false
 }
 \end{lstlisting}
-\texttt{if} statement can also take a statement before checking the expression's value like the traditional \texttt{for} loop in C language.
+\texttt{if} statement can also take an expression statement before checking the expression's value like the traditional \texttt{for} loop in C language.
 \begin{lstlisting}
 if var a = add(10, 20); a == 30 {
   // statements if expression is true
@@ -138,16 +138,16 @@ while expression {
   // statements if expression is true
 }
 \end{lstlisting}
-Like \texttt{if} statement, the \texttt{while} can take a statement before checking the expression's value as well. But this statement will be only executed once.
+Like \texttt{if} statement, the \texttt{while} can take an expression statement before checking the expression's value as well. But this statement will be executed once only.
 \begin{lstlisting}
 while a = add(10, 20); a < 50 {
   // statements if expression is true
 }
 \end{lstlisting}
-In the above code, the value \texttt{a} will be evaluated once and in the second loop, the \texttt{while} statement will only checks the value of \texttt{a < 50}.
+In the above code, \texttt{add(10, 20)} will be evaluated once and in the second iteration, the \texttt{while} statement will only checks the value of \texttt{a < 50}.
 
 \subsection{Function}
-Lucy uses \texttt{func} keyword to define a function. In Lucy, every function will returns a value. The type keyword can be omitted if the function returns an optional value. If the function returns a none optional value, the type keyword must be present.
+Lucy uses \texttt{func} keyword to define a function. In Lucy, every function will returns a value. The keyword representing type can be omitted if the function returns an optional value. If the function returns a none optional value, the keyword representing type must be present.
 \begin{lstlisting}
 func result() {
   return none
@@ -181,10 +181,10 @@ func main() {
   // a is number type with number value 0
 }
 \end{lstlisting}
-When declaring a function, the type keyword of parameter can be omitted if the the parameter is optional type. An optional typed parameter can be assigned with any other typed value but a none optional typed parameter can only be assigned with the corresponding typed value.
+When declaring a function, the keyword representing type of parameter can be omitted if the the parameter is optional type. An optional typed parameter can be assigned with any other typed value but a none optional typed parameter can only be assigned with the corresponding typed value.
 
 \subsection{Parameter Passing}
-Like a lot of other languages, invoking a function can be easily done with call the function name followed by the parameters. The only difference is that every thing in Lucy is passed by value, even if it is an array(As mentioned before, array is a primitive type in Lucy). In this case, modifying an array inside the function will not modify the real value of this array.
+Like a lot of other languages, invoking a function can be easily done specifying the function name followed by the arguments. The only difference is that every thing in Lucy is passed by value, even if it is an array(As mentioned before, array is a primitive type in Lucy). In this case, modifying an array inside the function will not modify the arguments.
 \begin{lstlisting}
 func modify(a: []) {
   a = array::append(a, "hello")
@@ -200,7 +200,7 @@ func main() {
 
 
 \section{Code Organization}
-The Lucy program is organized by packages. A Lucy source code file shall start with the package keyword with the a string package name. For example:
+The Lucy program is organized by packages. A Lucy source code file shall start with the package keyword with a string that is package name. For example:
 \begin{lstlisting}
 package "string"
 \end{lstlisting}
@@ -221,7 +221,7 @@ func funcb() {
   funca()
 }
 \end{lstlisting}
-Since the \texttt{file1} and \texttt{file2} are in the same package, when invoke the compile to compile these two files, the Lucy compile will link these two functions together into one module so that the all functions are visible inside the package. The details of how the compiler and linker works will be discussed in the Compilation and Linking section.
+Since the \texttt{file1} and \texttt{file2} are for the same package, when compiling these two files, the Lucy compiler will link these two functions together into one module so that all functions are visible inside the package. The details of how the compiler and linker work will be discussed in the Compilation and Linking section.
 \texttt{import} keyword is used to import functions from other packages. for example:
 \begin{lstlisting}
 package "main"
@@ -236,7 +236,7 @@ func main() {
   std::print("Hello World!\n")
 }
 \end{lstlisting}
-When the Lucy compiler compiles the source code, when never a function is parsed, the function signature will be prefixed by the package name so that in the linking time, the function can be linked by the linker.
+When the Lucy compiler compiles the source code, whenever a function is parsed, the function signature will be prefixed by the package name so that in the linking time, the function can be linked by the linker.
 \begin{lstlisting}
 package "string"
 
@@ -256,7 +256,7 @@ func main() {
   std::print("Hello World") // print Hello World
 }
 \end{lstlisting}
-The following example shows a sample way to organize the Lucy codes.
+The following example shows a way to organize the Lucy codes.
 \begin{lstlisting}
 game.ly    - package "game"
 main.ly    - package "main"
@@ -268,14 +268,14 @@ The detailed compilation and linking strategy will be discussed in the Compilati
 
 
 \section{Syntax Design and Trade-offs}
-In this section we will discuss how Lucy syntax and its features improves the the robustness of the program. Lucy is a general purpose language and it is designed to be lightweight. The syntax of Lucy is inspired by Golang and Swift, as well as TypeScript. It tends to be simple, elegant and easy for learning. The goal of the syntax is to provide a way which can minimum the tokens used without losing the power of expression ability. \\
+In this section we will discuss how Lucy syntax and its features improves the the robustness of the program. Lucy is a general purpose language and it is designed to be lightweight. The syntax of Lucy is inspired by Golang and Swift, as well as TypeScript. It tends to be simple, elegant and easy for learning. The goal of the syntax is to provide a way which can miniming the use of tokens without losing the expressiveness of the language. \\
 In the first subsection, we will take a look at the syntactic sugar in the Lucy language and discuss how it improves the experience of coding. In the second subsection, we will discuss the advantage and disadvantage of passing by values and passing by references.
 
 \subsection{Syntactic Sugar}
 In traditional programming language like C and Java, the basic syntaxes are variable declaration, assignment, expression, if statement and loop statement. In some modern languages, pattern matching will be introduced for replacing the switch statement.
 
 \subsubsection{Variable Declaration}
-In the static type programming language, usually the type keyword cannot be omitted so that the compiler can always detect the type of the variable. But in Golang and Swift, the type keyword is suggested to be omitted if the type can be inferred from the expression. For example:
+In the static type programming language, usually the keyword reprsenting the type cannot be omitted so that the compiler can always detect the type of the variable. But in Golang and Swift, the type keyword is suggested to be omitted if the type can be inferred from the expression. For example:
 \begin{lstlisting}
 var a = 0
 \end{lstlisting}
@@ -283,15 +283,15 @@ The variable \texttt{a} is a number type variable since the type of 0 is number.
 \begin{lstlisting}[language=c]
 int a;
 \end{lstlisting}
-The first style is always suggested in Golang since from the expression, it is easy to know the type of a and the initial value of a is 0. In C language's style, it is easy to know the type of a is int but the initial value is implicit. In fact, a lot of bugs caused by this style since the default value of an \texttt{int} variable is random in C.
-A different example is Python and JavaScript's style. Since they are dynamic type programming language and there is no need to declare the type of the variable. In Python and JavaScript, the variable declaration is just a simple assignment statement.
+The first style is always suggested in Golang since from the expression, it is easy to know the type of a and the initial value of a is 0. In C language's style, it is easy to know the type of a is int but the initial value is implicit. In fact, a lot of errors are caused by this style since the \texttt{int} variable is not initialized in C. \\
+A different example is Python and JavaScript's style. Since they are dynamic typed programming languages there is no need to declare the type of the variable. In Python and JavaScript, the variable declaration is just a simple assignment statement.
 \begin{lstlisting}
 a = 0
 \end{lstlisting}
-This style omits the var keyword which actually makes the code a little messy. For example, an editor with syntax highlighter can easily identify the declaration statement using the \texttt{var} style. But comparing with that, the single assignment style can not be easily identified by human. So considering the readability, a \texttt{var} keyword is required in Lucy for declaring variables.
+This style omits the var keyword which actually makes the code a little messy. For example, an editor with syntax highlighter can easily identify the declaration statement using the \texttt{var} style. But comparing with that, the single assignment style cannot be easily identified by human. So considering the readability, a \texttt{var} keyword is required in Lucy for declaring variables.
 
 \subsubsection{If, While and For}
-In traditional language like C, the if statement will takes an expression and brackets and braces are required.
+In a traditional language like C, the if statement will take an expression and brackets and braces are required.
 \begin{lstlisting}[language=c]
 if (expression) {}
 else {}
@@ -301,7 +301,7 @@ The Python's style may look a little bit simpler.
 if expression:
 else:
 \end{lstlisting}
-Python uses indentation to identify the statement blocks. This makes the code more easily for understanding but it may cause problems when moving code to a new IDE or editor because different editors will use different strategies to handle the indents. \\
+Python uses indentation to identify the statement blocks. This makes the code easier to understand but it may cause problems when moving the code to a new IDE or editor because different editors will use different strategies to handle the indents. \\
 In Golang and Swift's style, to improve the robustness of the code, the braces are still required so that even if the indentations are mixed by tabs and spaces, the compiler can still compiles the code correctly. But the bracket can be omitted.
 \begin{lstlisting}
 if expression {}
@@ -324,7 +324,7 @@ for item in items:
 This style omits the indexes in the for loop and it is easier for reading. Lucy takes this style in \texttt{for} loop to iterate arrays, but unlike python, the braces cannot be omitted to keep the robustness of the code.
 
 \subsection{Passing by Values VS Passing by References}
-Passing by values and passing by references have been discussed for a long time. In mathematical world, all functions are purely function which means the parameters of the function will not be changed after executing the function. In C language, everything is passed by value as well, but it can uses pointer to get the address of the parameter and change the value of the parameter. For example:
+Passing by values and passing by references have been discussed for a long time. In mathematical world, all functions are pure functions which means the parameters of the function will not be changed after executing the function. In C language, everything is passed by value as well, but it can uses pointer to get the address of the parameter and change the value of the parameter. For example:
 \begin{lstlisting}
 void swap(int* a, int* b) {
   int c = *a;
@@ -332,7 +332,7 @@ void swap(int* a, int* b) {
   *b = c;
 }
 \end{lstlisting}
-Since this kind of functions will modify the values of the parameters, for a complex function, it may make the code more confusing. Another disadvantage is that this function can not be optimized for a multi-threads program. But on the other hand, for a pure function, usually it only returns one result, and there is no way to modify two variables. Since this kind of functions can change the values of the parameters, the results can be stored in the parameters, though this may confuse the formal definition of function. An elegant way to solve this problem is to allow function to return more than one results, like Golang and Python:
+Since this kind of functions will modify the values of the parameters, for a complex function, it may make the code confusing. Another disadvantage is that this function cannot be optimized for a multi-threads program. But on the other hand, for a pure function, usually it only returns one result, and there is no way to modify two variables. Since this kind of functions can change the values of the parameters, the results can be stored in the parameters, though this may confuse the formal definition of function. An elegant way to solve this problem is to allow function to return more than one results, like Golang and Python:
 \begin{lstlisting}[language=python]
 a, b = swap(a, b)
 \end{lstlisting}
