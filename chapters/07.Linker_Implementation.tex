@@ -15,10 +15,10 @@ string:len {
   pop s
 }
 \end{lstlisting}
-In this case, inside a package, even the two functions are in different files, they cannot be the same name. Otherwise when the global linker links all module files into one module, the naming will be duplicated and an \texttt{OverdefinedException} will be thrown. But if these two functions are in two different packages, it will be fine if they have the same name since they will be prefixed by their package's name.
+In this case, inside a package, even when two functions are in different files, they cannot have the same name. Otherwise when the global linker links all module files into one module, the naming will be duplicated and an \texttt{OverdefinedException} will be thrown. But if these two functions are in two different packages, it will be fine if they have the same name since they will be prefixed by their package's name.
 
 \section{Module Representation}
-The linker will read in different module files and finally produce one final module. If the module files are some partial files of the package, the linker will merge them into one module and if the one of the module files is a main module, the linker will merge them and produce a new main module. Note that if the modules coming from different packages and there is no main module in those files, the linker will generate an exception, i.e. linker cannot link two modules from different packages except one of them is main module.
+The linker will read in different module files and finally produce one final module. If the module files are some partial files of the package, the linker will merge them into one module and if one of the module files is a main module, the linker will merge them and produce a new main module. Note that if the modules coming from different packages and there is no main module in those files, the linker will generate an exception, i.e. linker cannot link two modules from different packages except one of them is main module.
 \begin{lstlisting}[language=LucyX]
 ; file 1
 ; module name: string
