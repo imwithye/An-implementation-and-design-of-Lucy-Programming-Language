@@ -18,7 +18,7 @@ A Java virtual machine (JVM) is an abstract computing machine that enables a com
 
 
 \section{Register and Its Scopes}
-As we mentioned in last chapter, Lucy X assembly uses unlimited registers and scope isolation for the subroutines. In Lucy VM, registers are nothing more than a value container. It holds values and it can be addressed by the register name. Registers cannot share the same name in the same scope. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy VM will keep looking for the definition in its parent scope until the module’s root scope. \\
+As we mentioned in the last chapter, Lucy X assembly uses unlimited registers and scope isolation for the subroutines. In Lucy VM, registers are nothing more than a value container. It holds values and it can be addressed by the register name. Registers cannot share the same name in the same scope. Subroutines are able to access the global scope and if the identifier can not be retrieved from its own scope, Lucy VM will keep looking for the definition in its parent scope until the module’s root scope. \\
 The \texttt{Register} class is very simple and straightforward:
 \begin{lstlisting}[language=java]
 public class Register {
@@ -92,7 +92,7 @@ The program counter is a pointer which points to the next instruction and memory
 
 
 \section{Routine Execution}
-The Lucy program will start executing from the \texttt{main} subroutine. When VM starts, it looks for the \texttt{main} subroutine from the Lucy X module, and start the routine execution process. \\
+The Lucy program will start executing from the \texttt{main} subroutine. When VM starts, it looks for the \texttt{main} subroutine from the Lucy X module, and starts the routine execution process. \\
 Before calling a subroutine, Lucy VM will first capture the current scope and program counter and reset them to initial state.
 \begin{lstlisting}[language=java]
 public Machine call(Module module, String routineName) {
@@ -158,4 +158,4 @@ if (!hasReturn) {
 The \texttt{execute} method returns true if the instruction is a \texttt{ret} instruction or it breaks the execution of the subroutine.
 
 \section{Module Execution}
-Since Lucy only supports static linking, when executing a module, the module must contains all required method instead of loading them during the run time. Otherwise, an \texttt{UndefinedException} will be thrown. Moreover, the module must be an executable module, which shall contains the main function. A static library module will make the VM throw an \texttt{UndefinedException}.
+Since Lucy only supports static linking, when executing a module, the module must contains all required methods instead of loading them during the run time. Otherwise, an \texttt{UndefinedException} will be thrown. Moreover, the module must be an executable module, which shall contain the main function. A static library module will make the VM throw an \texttt{UndefinedException}.
